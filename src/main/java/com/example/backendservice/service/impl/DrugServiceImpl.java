@@ -20,7 +20,6 @@ import java.util.List;
 @RequiredArgsConstructor
 @Transactional
 public class DrugServiceImpl implements DrugService {
-    private final DrugMapper drugMapper;
     private final DrugRepository drugRepository;
 
     @Override
@@ -32,16 +31,16 @@ public class DrugServiceImpl implements DrugService {
 
     @Override
     public DrugDto findDrugById(Long id) {
-        return drugMapper.entityToDto(drugRepository.findById(id).orElseThrow(() -> {
+        return DrugMapper.entityToDto(drugRepository.findById(id).orElseThrow(() -> {
             throw new ResourceNotFoundException(Constants.DRUG + Constants.NOT_FOUND);
         }));
     }
 
     @Override
     public DrugDto addDrug(DrugRequest request) {
-        DrugEntity drug = drugMapper.requestToEntity(request);
+        DrugEntity drug = DrugMapper.requestToEntity(request);
         drug.setLastModify(new Timestamp(System.currentTimeMillis()));
-        return drugMapper.entityToDto(drugRepository.save(drug));
+        return DrugMapper.entityToDto(drugRepository.save(drug));
     }
 
     @Override
@@ -49,9 +48,9 @@ public class DrugServiceImpl implements DrugService {
         DrugEntity old = drugRepository.findById(drug.getId()).orElseThrow(() -> {
             throw new ResourceNotFoundException(Constants.DRUG + Constants.NOT_FOUND);
         });
-        DrugEntity newData = drugMapper.requestToEntity(drug);
+        DrugEntity newData = DrugMapper.requestToEntity(drug);
         DrugEntity mergedData = old.merge(old, newData);
-        return drugMapper.entityToDto(drugRepository.save(mergedData));
+        return DrugMapper.entityToDto(drugRepository.save(mergedData));
     }
 
     @Override

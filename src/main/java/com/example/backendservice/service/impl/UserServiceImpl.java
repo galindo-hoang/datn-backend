@@ -4,9 +4,10 @@ import com.example.backendservice.common.utils.CodeGeneratorUtils;
 import com.example.backendservice.common.utils.Constants;
 import com.example.backendservice.common.utils.PhoneNumberUtils;
 import com.example.backendservice.exception.ResourceInvalidException;
-import com.example.backendservice.mapper.AccountBuilder;
+import com.example.backendservice.exception.ResourceNotFoundException;
+import com.example.backendservice.mapper.AccountMapping;
 import com.example.backendservice.model.dto.AuthDto;
-import com.example.backendservice.model.entity.account.UserEntity;
+import com.example.backendservice.model.entity.account.AccountEntity;
 import com.example.backendservice.model.request.AccountRequest;
 import com.example.backendservice.repository.AccountRepository;
 import com.example.backendservice.service.UserService;
@@ -23,12 +24,12 @@ import java.util.Objects;
 @RequiredArgsConstructor
 public class UserServiceImpl implements UserService {
     private final AccountRepository accountRepository;
-    private final AccountBuilder accountBuilder;
+    private final AccountMapping accountMapper;
     private final HashMap<String, Pair<AuthDto, AccountRequest>> register = new HashMap<>();
 
     @Override
     public boolean checkingExist(String phoneNumber) {
-        UserEntity option = accountRepository.findUserByPhoneNumber(phoneNumber);
+        AccountEntity option = accountRepository.findUserByPhoneNumber(phoneNumber);
         return option != null;
     }
 
@@ -38,19 +39,22 @@ public class UserServiceImpl implements UserService {
             if (checkingExist(accountRequest.getPhoneNumber())) return false;
 
             String otp = CodeGeneratorUtils.invoke();
-            register.put(accountRequest.getPhoneNumber(), Pair.pair(new AuthDto(otp), accountRequest));
+            AuthDto authDto = new AuthDto();
+            authDto.setOtp(otp);
+            register.put(accountRequest.getPhoneNumber(), Pair.pair(authDto, accountRequest));
             return true;
         } else throw new ResourceInvalidException(Constants.PHONE + Constants.IN_VALID);
     }
 
     @Override
-    public Boolean validate(AccountRequest accountRequest) {
+    public boolean validate(AccountRequest accountRequest) {
         if (register.containsKey(accountRequest.getPhoneNumber())) {
             AuthDto auth = register.get(accountRequest.getPhoneNumber()).first;
             AccountRequest account = register.get(accountRequest.getPhoneNumber()).second;
             if (!Objects.equals(auth.getOtp(), accountRequest.getOtp())) return false;
-            UserEntity user = accountBuilder.requestToEntity(account);
+            AccountEntity user = accountMapper.requestToEntity(account);
             accountRepository.save(user);
+            register.remove(accountRequest.getPhoneNumber());
             return true;
         } else return false;
     }
@@ -66,11 +70,11 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public Boolean loginTraditional(AccountRequest accountRequest) {
-        UserEntity user = accountRepository.findUserByPhoneNumber(accountRequest.getPhoneNumber());
-        // TODO: do JWT
-        if(user != null && user.getPassword().equals(accountRequest.getPassword())) {
-            return true;
-        }else return false;
+    public AuthDto loginTraditional(AccountRequest accountRequest) {
+        AccountEntity user = accountRepository.findUserByPhoneNumber(accountRequest.getPhoneNumber());
+        if (user != null && user.getPassword().equals(accountRequest.getPassword())) {
+            // TODO: do JWT
+            return null;
+        } else throw new ResourceNotFoundException(Constants.ACCOUNT + Constants.NOT_FOUND);
     }
 }

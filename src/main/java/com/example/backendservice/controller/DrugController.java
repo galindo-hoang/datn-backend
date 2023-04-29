@@ -31,8 +31,9 @@ public class DrugController extends BaseController {
     }
 
     @GetMapping()
-    ResponseEntity<DrugDto> getDrugById(@RequestParam Long id) {
-        return ResponseEntity.status(HttpStatus.OK).body(drugService.findDrugById(id));
+    ResponseEntity<Long> getDrugById(@RequestParam Long id) {
+        return ResponseEntity.status(HttpStatus.OK).body(id);
+//        return ResponseEntity.status(HttpStatus.OK).body(drugService.findDrugById(id));
     }
 
     @RequestMapping(path = "delete", method = DELETE)

@@ -1,7 +1,7 @@
 package com.example.backendservice.repository;
 
-import com.example.backendservice.model.entity.account.UserEntity;
+import com.example.backendservice.model.entity.account.AccountEntity;
 
 public interface AccountRepositoryCustom {
-    UserEntity findUserByPhoneNumber(String phoneNumber);
+    AccountEntity findUserByPhoneNumber(String phoneNumber);
 }

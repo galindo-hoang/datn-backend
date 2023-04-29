@@ -1,7 +1,7 @@
 package com.example.backendservice.model.entity.prescription;
 
 import com.example.backendservice.common.model.BaseEntity;
-import com.example.backendservice.model.entity.account.UserEntity;
+import com.example.backendservice.model.entity.account.AccountEntity;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -26,14 +26,14 @@ public class PrescriptionEntity extends BaseEntity {
     private String imagePath;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    private UserEntity user;
+    private AccountEntity user;
 
-    public void addSelf(UserEntity user) {
+    public void addSelf(AccountEntity user) {
         user.getPrescriptions().add(this);
         this.user = user;
     }
 
-    public void removeSelf(UserEntity user) {
+    public void removeSelf(AccountEntity user) {
         user.getPrescriptions().remove(this);
     }
 }

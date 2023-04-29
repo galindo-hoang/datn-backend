@@ -1,7 +1,7 @@
 package com.example.backendservice.model.entity.reminder;
 
 import com.example.backendservice.common.model.BaseEntity;
-import com.example.backendservice.model.entity.account.UserEntity;
+import com.example.backendservice.model.entity.account.AccountEntity;
 import com.example.backendservice.model.entity.prescription.PrescriptionDrugEntity;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -30,17 +30,17 @@ public class ReminderEntity extends BaseEntity {
     @OneToMany(mappedBy = "reminder", cascade = CascadeType.ALL)
     private List<PrescriptionDrugEntity> prescriptionDrugs;
     @ManyToOne(fetch = FetchType.LAZY)
-    private UserEntity user;
+    private AccountEntity user;
 
 
-    public void addSelf(PrescriptionDrugEntity prescriptionDrug, UserEntity user) {
+    public void addSelf(PrescriptionDrugEntity prescriptionDrug, AccountEntity user) {
         prescriptionDrug.setReminder(this);
         prescriptionDrugs.add(prescriptionDrug);
         user.getReminders().add(this);
         this.user = user;
     }
 
-    public void removeSelf(UserEntity user) {
+    public void removeSelf(AccountEntity user) {
         while (!prescriptionDrugs.isEmpty()) {
             PrescriptionDrugEntity tmp = prescriptionDrugs.get(0);
             prescriptionDrugs.remove(0);

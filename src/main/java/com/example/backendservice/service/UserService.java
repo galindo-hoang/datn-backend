@@ -6,8 +6,8 @@ import com.example.backendservice.model.request.AccountRequest;
 public interface UserService {
     boolean checkingExist(String phoneNumber);
     boolean register(AccountRequest accountRequest);
-    java.lang.Boolean validate(AccountRequest accountRequest);
+    boolean validate(AccountRequest accountRequest);
     AuthDto forgetPassword(AccountRequest accountRequest);
     AuthDto changePassword(AccountRequest accountRequest);
-    Boolean loginTraditional(AccountRequest accountRequest);
+    AuthDto loginTraditional(AccountRequest accountRequest);
 }

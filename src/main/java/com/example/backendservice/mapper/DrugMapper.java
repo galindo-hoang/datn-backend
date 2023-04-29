@@ -6,13 +6,28 @@ import com.example.backendservice.model.request.DrugRequest;
 
 public class DrugMapper {
     public static DrugDto entityToDto(DrugEntity drug) {
-        return null;
+        return DrugDto.builder()
+                .id(drug.getId())
+                .drugName(drug.getDrugName())
+                .registerNumber(drug.getRegisterNumber())
+                .activeIngredient(drug.getInteractions())
+                .dosageForms(drug.getDosageForm())
+                .sideEffects(drug.getSideEffects())
+                .drugStorage(drug.getDrugStorage())
+                .remarks(drug.getRemarks())
+                .build();
     }
 
     public static DrugEntity requestToEntity(DrugRequest drug) {
-        DrugEntity.builder()
+        return DrugEntity.builder()
                 .drugName(drug.getDrugName())
+                .indications(drug.getActiveIngredient())
                 .registerNumber(drug.getRegisterNumber())
-                .ac
+                .dosageForm(drug.getDosageForms())
+                .usageAndDosage(drug.getUsageDosage())
+                .sideEffects(drug.getSideEffects())
+                .drugStorage(drug.getDrugStorage())
+                .remarks(drug.getRemarks())
+                .build();
     }
 }

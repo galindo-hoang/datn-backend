@@ -25,7 +25,7 @@ public class DrugEntity extends BaseEntity implements DataAdapter<DrugEntity> {
     private String usageAndDosage;
     private String indications;
     private String contraindications;
-    private String interactions;
+    private String interactions; // activate-Ingredient
     private String sideEffects;
     private Timestamp lastModify = new Timestamp(System.currentTimeMillis());
     private String drugStorage;

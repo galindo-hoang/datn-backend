@@ -21,7 +21,7 @@ import java.util.List;
 @Table(name = "account")
 @NoArgsConstructor
 @AllArgsConstructor
-public class UserEntity extends BaseEntity implements DataAdapter<UserEntity> {
+public class AccountEntity extends BaseEntity implements DataAdapter<AccountEntity> {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -42,7 +42,7 @@ public class UserEntity extends BaseEntity implements DataAdapter<UserEntity> {
     private List<ReminderEntity> reminders;
 
     @Override
-    public UserEntity merge(UserEntity oldData, UserEntity newData) {
+    public AccountEntity merge(AccountEntity oldData, AccountEntity newData) {
         oldData.setPhoneNumber(newData.getPhoneNumber() != null ? newData.getPhoneNumber() : oldData.getPhoneNumber());
         oldData.setPassword(newData.getPassword() != null ? newData.getPassword() : oldData.getPassword());
         oldData.setUserName(newData.getUserName() != null ? newData.getUserName() : oldData.getUserName());
