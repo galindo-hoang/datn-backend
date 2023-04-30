@@ -12,6 +12,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.List;
+import java.util.Map;
+
 import static org.springframework.web.bind.annotation.RequestMethod.*;
 
 @RestController
@@ -40,5 +43,24 @@ public class DrugController extends BaseController {
     ResponseEntity<Object> deleteDrug(@RequestParam Long id) {
         drugService.removeDrug(id);
         return ResponseEntity.status(HttpStatus.NO_CONTENT).body(null);
+    }
+
+    @GetMapping()
+    ResponseEntity<List<DrugDto>> getListDrugs(
+            @RequestParam String text,
+            @RequestParam Long categoryId,
+            @RequestParam Long offset,
+            @RequestParam Long limit
+    ) {
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(drugService.findDrugsByFilter(
+                        Map.of(
+                                "text", text,
+                                "categoryId", categoryId,
+                                "offset", offset,
+                                "limit", limit
+                        ))
+                );
     }
 }

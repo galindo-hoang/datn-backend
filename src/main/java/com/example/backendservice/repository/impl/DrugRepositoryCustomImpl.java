@@ -9,7 +9,12 @@ import java.util.List;
 @Repository
 public class DrugRepositoryCustomImpl implements DrugRepositoryCustom {
     @Override
-    public List<DrugEntity> findDrugsByText(String text, Integer offset, Integer size) {
+    public List<DrugEntity> findDrugsByText(String text, Long offset, Long limit) {
+        return null;
+    }
+
+    @Override
+    public List<DrugEntity> findDrugsByCategory(Long categoryId, Long offset, Long size) {
         return null;
     }
 }

@@ -1,16 +1,14 @@
 package com.example.backendservice.model.request;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import com.example.backendservice.common.utils.TypeFilter;
+import lombok.*;
 
-@Getter
-@Setter
-@AllArgsConstructor
-@NoArgsConstructor
+@Data
+@Builder
 public class FilterRequest {
-    String text;
-    Integer offset;
-    Integer size;
+    TypeFilter type;
+    String keyRequestText;
+    Long keyRequestId;
+    Long offset;
+    Long limit;
 }
