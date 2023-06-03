@@ -26,7 +26,6 @@ public class ScanController extends BaseController {
 
     @RequestMapping(path = "upload", method = POST)
     ResponseEntity<String> uploadImage(@RequestParam("image") MultipartFile image) {
-        System.out.println("checkinggg: " + image.getSize());
         return ResponseEntity.status(HttpStatus.OK).body(scanService.upload(image));
     }
 
