@@ -45,7 +45,7 @@ public class CategoryController extends BaseController {
                 ));
     }
 
-    @GetMapping()
+    @GetMapping(path = "multiple")
     ResponseEntity<List<CategoryDto>> getList(@RequestParam Long offSet, @RequestParam Long limit) {
         return ResponseEntity.status(HttpStatus.OK).body(categoryService.findListCategories(offSet, limit));
     }

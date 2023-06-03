@@ -45,7 +45,7 @@ public class DrugController extends BaseController {
         return ResponseEntity.status(HttpStatus.NO_CONTENT).body(null);
     }
 
-    @GetMapping()
+    @GetMapping(path = "multiple")
     ResponseEntity<List<DrugDto>> getListDrugs(
             @RequestParam String text,
             @RequestParam Long categoryId,

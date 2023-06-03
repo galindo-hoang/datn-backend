@@ -15,7 +15,6 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.UUID;
 
-import static com.example.backendservice.common.utils.Constants.BUCKET_NAME;
 
 public class ImageRepositoryImpl implements ImageRepository {
     @Override
@@ -34,7 +33,7 @@ public class ImageRepositoryImpl implements ImageRepository {
             ////////////////////////////////   Download  ////////////////////////////////////////////////////////////////////////
             Credentials credentials = GoogleCredentials.fromStream(new FileInputStream(Constants.PATH_JSON_FIREBASE));
             Storage storage = StorageOptions.newBuilder().setCredentials(credentials).build().getService();
-            Blob blob = storage.get(BlobId.of(BUCKET_NAME, fileName));
+            Blob blob = storage.get(BlobId.of(Constants.BUCKET_NAME, fileName));
             blob.downloadTo(Paths.get(destFileName));
             return true;
         } catch (IOException e) {
@@ -44,7 +43,7 @@ public class ImageRepositoryImpl implements ImageRepository {
 
     private String uploadFile(File file, String fileName, String extension) {
         try {
-            BlobId blobId = BlobId.of(BUCKET_NAME, fileName);
+            BlobId blobId = BlobId.of(Constants.BUCKET_NAME, fileName);
             BlobInfo blocInfo = BlobInfo.newBuilder(blobId).setContentType(extension).build();
             Credentials credentials = GoogleCredentials.fromStream(new FileInputStream(Constants.PATH_JSON_FIREBASE));
             Storage storage = StorageOptions.newBuilder().setCredentials(credentials).build().getService();
