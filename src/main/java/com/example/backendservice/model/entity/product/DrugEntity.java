@@ -28,6 +28,7 @@ public class DrugEntity extends BaseEntity implements DataAdapter<DrugEntity> {
     private String interactions; // activate-Ingredient
     private String sideEffects;
     private Timestamp lastModify = new Timestamp(System.currentTimeMillis());
+    private String label;
     private String drugStorage;
     private String remarks;
     private String imagePath;
@@ -62,7 +63,7 @@ public class DrugEntity extends BaseEntity implements DataAdapter<DrugEntity> {
         oldData.setDrugStorage(newData.getDrugStorage() != null ? newData.getDrugStorage() : oldData.getDrugStorage());
         oldData.setRemarks(newData.getRemarks() != null ? newData.getRemarks() : oldData.getRemarks());
         oldData.setImagePath(newData.getImagePath() != null ? newData.getImagePath() : oldData.getImagePath());
-
+        oldData.setLabel(newData.getLabel() != null ? newData.getLabel() : oldData.getLabel());
         return oldData;
     }
 }

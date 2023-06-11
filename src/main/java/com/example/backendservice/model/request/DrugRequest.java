@@ -18,6 +18,7 @@ public class DrugRequest {
     private String sideEffects;
     private String drugStorage;
     private String remarks;
+    private String label;
 
     private Long id;
 }

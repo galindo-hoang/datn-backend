@@ -7,10 +7,7 @@ import com.example.backendservice.service.CategoryService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.Map;
@@ -24,13 +21,13 @@ import static org.springframework.web.bind.annotation.RequestMethod.POST;
 public class CategoryController extends BaseController {
     private final CategoryService categoryService;
 
-    @RequestMapping(name = "add", method = POST)
-    ResponseEntity<CategoryDto> addCategory(CategoryRequest categoryRequest) {
+    @RequestMapping(path = "add", method = POST)
+    ResponseEntity<CategoryDto> addCategory(@RequestBody CategoryRequest categoryRequest) {
         return ResponseEntity.status(HttpStatus.ACCEPTED).body(categoryService.addCategory(categoryRequest));
     }
 
-    @RequestMapping(name = "delete", method = DELETE)
-    ResponseEntity<Object> removeCategory(CategoryRequest categoryRequest) {
+    @RequestMapping(path = "delete", method = DELETE)
+    ResponseEntity<Object> removeCategory(@RequestBody CategoryRequest categoryRequest) {
         categoryService.removeCategory(categoryRequest);
         return ResponseEntity.status(HttpStatus.NO_CONTENT).body(null);
     }

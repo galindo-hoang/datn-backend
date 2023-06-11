@@ -7,10 +7,7 @@ import com.example.backendservice.service.DrugService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.Map;
@@ -24,12 +21,12 @@ public class DrugController extends BaseController {
     private final DrugService drugService;
 
     @RequestMapping(path = "add", method = POST)
-    ResponseEntity<DrugDto> addDrug(DrugRequest request) {
+    ResponseEntity<DrugDto> addDrug(@RequestBody DrugRequest request) {
         return ResponseEntity.status(HttpStatus.ACCEPTED).body(drugService.addDrug(request));
     }
 
     @RequestMapping(path = "update", method = PUT)
-    ResponseEntity<DrugDto> updateDrug(DrugRequest request) {
+    ResponseEntity<DrugDto> updateDrug(@RequestBody DrugRequest request) {
         return ResponseEntity.status(HttpStatus.ACCEPTED).body(drugService.updateDrug(request));
     }
 

@@ -2,11 +2,11 @@ package com.example.backendservice.common.model;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.MappedSuperclass;
+import jakarta.persistence.Version;
 import lombok.Data;
-import org.springframework.data.annotation.Version;
 
-@MappedSuperclass
 @Data
+@MappedSuperclass
 public class BaseEntity {
     @Version
     @Column(name = "version")

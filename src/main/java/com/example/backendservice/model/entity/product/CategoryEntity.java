@@ -2,8 +2,7 @@ package com.example.backendservice.model.entity.product;
 
 import com.example.backendservice.common.model.BaseEntity;
 import jakarta.persistence.*;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
 import java.util.List;
 
@@ -11,6 +10,9 @@ import java.util.List;
 @Setter
 @Entity
 @Table(name = "category")
+@Builder
+@AllArgsConstructor
+@NoArgsConstructor
 public class CategoryEntity extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

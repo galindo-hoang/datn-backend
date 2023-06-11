@@ -16,5 +16,6 @@ public class DrugDto {
     private String usageDosage;
     private String sideEffects;
     private String drugStorage;
+    private String label;
     private String remarks;
 }
