@@ -19,6 +19,7 @@ public class DrugRequest {
     private String drugStorage;
     private String remarks;
     private String label;
+    private Long categoryId;
 
     private Long id;
 }

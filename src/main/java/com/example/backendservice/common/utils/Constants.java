@@ -10,4 +10,7 @@ public class Constants {
     static public String EXIST = "is exist";
     static public String BUCKET_NAME = "datn-7d242.appspot.com";
     static public String PATH_JSON_FIREBASE = "/src/main/resources/configFirebase.json";
+    static public String defaultValueSize = "20";
+    static public String defaultValueOffset = "0";
+    static public String defaultValueText = "";
 }

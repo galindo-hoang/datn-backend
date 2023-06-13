@@ -1,33 +1,24 @@
 package com.example.backendservice.service.impl;
 
+import com.example.backendservice.common.utils.Constants;
+import com.example.backendservice.exception.ResourceNotFoundException;
 import com.example.backendservice.mapper.CategoryMapper;
-import com.example.backendservice.model.DrugK;
 import com.example.backendservice.model.dto.CategoryDto;
 import com.example.backendservice.model.entity.product.CategoryEntity;
 import com.example.backendservice.model.request.CategoryRequest;
 import com.example.backendservice.repository.CategoryRepository;
 import com.example.backendservice.service.CategoryService;
-import com.google.gson.Gson;
 import lombok.RequiredArgsConstructor;
-import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.annotation.PostConstruct;
-import java.io.BufferedReader;
-import java.io.FileInputStream;
-import java.io.InputStreamReader;
-import java.nio.charset.StandardCharsets;
 import java.util.List;
-import java.util.Map;
-import java.util.Objects;
 
 @Service
 @Transactional
 @RequiredArgsConstructor
 public class CategoryServiceImpl implements CategoryService {
     private final CategoryRepository categoryRepository;
-    private final Environment env;
 
     @Override
     public CategoryDto addCategory(CategoryRequest categoryRequest) {
@@ -38,28 +29,29 @@ public class CategoryServiceImpl implements CategoryService {
 
     @Override
     public void removeCategory(CategoryRequest categoryRequest) {
-
+        categoryRepository.deleteById(categoryRequest.getId());
     }
 
     @Override
-    public CategoryDto findDetailsCategory(Map<String, Object> request) {
-        if (request.containsKey("id")) {
-            return this.findCategoryById((Long) request.get("id"));
-        } else if (request.containsKey("name")) {
-            return this.findCategoryByName((String) request.get("name"));
-        } else throw new IllegalArgumentException("arguments is not enough!!");
-    }
-
-    @Override
-    public List<CategoryDto> findListCategories(Long offSet, Long limit) {
-        return null;
+    public CategoryDto findDetailsCategory(Long id) {
+        return findCategoryById(id);
     }
 
     public CategoryDto findCategoryById(Long id) {
-        return null;
+        CategoryEntity category = categoryRepository.findById(id).orElseThrow(() -> {
+            throw new ResourceNotFoundException(Constants.CATEGORY + Constants.NOT_FOUND);
+        });
+        return CategoryMapper.entityToDto(category);
     }
 
-    public CategoryDto findCategoryByName(String name) {
-        return null;
+    @Override
+    public List<CategoryDto> findCategoriesByName(String name, Long offset, Long size) {
+        return categoryRepository.findCategoriesByText(name, offset, size)
+                .stream().map(CategoryMapper::entityToDto).toList();
+    }
+
+    @Override
+    public Long getSize(String name) {
+        return (long) categoryRepository.findSizeByText(name).size();
     }
 }

@@ -20,8 +20,8 @@ public class ManufactureEntity extends BaseEntity {
     private String address;
     private String phoneNumber;
 
-    @OneToMany(mappedBy = "manufacture", cascade = CascadeType.ALL)
-    private List<DrugEntity> drugs;
+//    @OneToMany(mappedBy = "manufacture", cascade = CascadeType.ALL)
+//    private List<DrugEntity> drugs;
 
 //    public void addDrug(DrugEntity drug) {
 //        this.drugs.add(drug);

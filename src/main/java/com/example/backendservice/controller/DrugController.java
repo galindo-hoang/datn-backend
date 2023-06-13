@@ -3,6 +3,7 @@ package com.example.backendservice.controller;
 import com.example.backendservice.common.controller.BaseController;
 import com.example.backendservice.model.dto.DrugDto;
 import com.example.backendservice.model.request.DrugRequest;
+import com.example.backendservice.model.request.FilterRequest;
 import com.example.backendservice.service.DrugService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -10,7 +11,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Map;
 
 import static org.springframework.web.bind.annotation.RequestMethod.*;
 
@@ -35,6 +35,11 @@ public class DrugController extends BaseController {
         return ResponseEntity.status(HttpStatus.OK).body(drugService.findDrugById(id));
     }
 
+    @GetMapping(path = "size")
+    ResponseEntity<Long> getSize(@RequestParam(required = false, defaultValue = "") String text) {
+        return ResponseEntity.status(HttpStatus.OK).body(drugService.getSize(text));
+    }
+
     @RequestMapping(path = "delete", method = DELETE)
     ResponseEntity<Object> deleteDrug(@RequestParam Long id) {
         drugService.removeDrug(id);
@@ -42,21 +47,34 @@ public class DrugController extends BaseController {
     }
 
     @GetMapping(path = "multiple")
-    ResponseEntity<List<DrugDto>> getListDrugs(
-            @RequestParam String text,
-            @RequestParam Long categoryId,
-            @RequestParam Long offset,
-            @RequestParam Long limit
+    ResponseEntity<List<DrugDto>> getListDrugsByName(
+            @RequestParam(required = false, defaultValue = "") String name,
+            @RequestParam(required = false, defaultValue = "0") Long offset,
+            @RequestParam(required = false, defaultValue = "20") Long size
     ) {
-        return ResponseEntity
-                .status(HttpStatus.OK)
-                .body(drugService.findDrugsByFilter(
-                        Map.of(
-                                "text", text,
-                                "categoryId", categoryId,
-                                "offset", offset,
-                                "limit", limit
-                        ))
-                );
+        return ResponseEntity.status(HttpStatus.OK).body(
+                drugService.findDrugsByText(
+                        FilterRequest.builder()
+                                .keyRequestText(name)
+                                .offset(offset)
+                                .limit(size)
+                                .build()
+                ));
+    }
+
+    @GetMapping(path = "category")
+    ResponseEntity<List<DrugDto>> getListDrugsByCategory(
+            @RequestParam Long categoryId,
+            @RequestParam(required = false, defaultValue = "0") Long offset,
+            @RequestParam(required = false, defaultValue = "20") Long size
+    ) {
+        return ResponseEntity.status(HttpStatus.OK).body(
+                drugService.findDrugsByCategory(
+                        FilterRequest.builder()
+                                .keyRequestId(categoryId)
+                                .offset(offset)
+                                .limit(size)
+                                .build()
+                ));
     }
 }

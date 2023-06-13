@@ -10,7 +10,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Map;
 
 import static org.springframework.web.bind.annotation.RequestMethod.DELETE;
 import static org.springframework.web.bind.annotation.RequestMethod.POST;
@@ -33,17 +32,23 @@ public class CategoryController extends BaseController {
     }
 
     @GetMapping()
-    ResponseEntity<CategoryDto> getDetails(@RequestParam Long id, @RequestParam String name) {
+    ResponseEntity<CategoryDto> getDetails(@RequestParam Long id) {
         return ResponseEntity.status(HttpStatus.OK).body(
-                categoryService.findDetailsCategory(
-                        Map.of("id", id,
-                                "name", name
-                        )
-                ));
+                categoryService.findDetailsCategory(id));
     }
 
     @GetMapping(path = "multiple")
-    ResponseEntity<List<CategoryDto>> getList(@RequestParam Long offSet, @RequestParam Long limit) {
-        return ResponseEntity.status(HttpStatus.OK).body(categoryService.findListCategories(offSet, limit));
+    ResponseEntity<List<CategoryDto>> getList(
+            @RequestParam(required=false, defaultValue = "") String name,
+            @RequestParam(required=false, defaultValue = "0") Long offSet,
+            @RequestParam(required=false, defaultValue = "20") Long size) {
+        return ResponseEntity.status(HttpStatus.OK).body(categoryService.findCategoriesByName(name, offSet, size));
+    }
+
+    @GetMapping(path = "size")
+    ResponseEntity<Long> getSize(
+            @RequestParam(required=false, defaultValue = "") String text
+    ) {
+        return ResponseEntity.status(HttpStatus.OK).body(categoryService.getSize(text));
     }
 }

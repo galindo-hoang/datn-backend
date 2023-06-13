@@ -6,6 +6,7 @@ import java.util.List;
 
 public interface DrugRepositoryCustom {
     List<DrugEntity> findDrugsByText(String text, Long offset, Long size);
+    List<DrugEntity> findAllDrugsByText(String text);
     List<DrugEntity> findDrugsByCategory(Long categoryId, Long offset, Long size);
 
 }
