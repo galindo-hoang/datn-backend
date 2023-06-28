@@ -10,6 +10,7 @@ import lombok.*;
 public class DrugDto {
     private Long id;
     private String drugName;
+    private Long price;
     private String registerNumber;
     private String activeIngredient;
     private String dosageForms;

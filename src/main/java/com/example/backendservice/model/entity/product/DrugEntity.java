@@ -21,6 +21,7 @@ public class DrugEntity extends BaseEntity implements DataAdapter<DrugEntity> {
 
     private String drugName;
     private String registerNumber;
+    private Long price;
     private String dosageForm;
     private String usageAndDosage;
     private String indications;
@@ -61,6 +62,7 @@ public class DrugEntity extends BaseEntity implements DataAdapter<DrugEntity> {
         oldData.setDrugName(newData.getDrugName() != null ? newData.getDrugName() : oldData.getDrugName());
         oldData.setRegisterNumber(newData.getRegisterNumber() != null ? newData.getRegisterNumber() : oldData.getRegisterNumber());
         oldData.setDosageForm(newData.getDosageForm() != null ? newData.getDosageForm() : oldData.getDosageForm());
+        oldData.setPrice(newData.getPrice() != null ? newData.getPrice() : oldData.getPrice());
         oldData.setUsageAndDosage(newData.getUsageAndDosage() != null ? newData.getUsageAndDosage() : oldData.getUsageAndDosage());
         oldData.setIndications(newData.getIndications() != null ? newData.getIndications() : oldData.getIndications());
         oldData.setContraindications(newData.getContraindications() != null ? newData.getContraindications() : oldData.getContraindications());

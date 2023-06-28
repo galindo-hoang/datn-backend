@@ -8,6 +8,7 @@ public class CategoryMapper {
     public static CategoryEntity requestToEntity(CategoryRequest categoryRequest) {
         return CategoryEntity.builder()
                 .name(categoryRequest.getName())
+                .image(categoryRequest.getImage())
                 .build();
     }
 
@@ -15,6 +16,7 @@ public class CategoryMapper {
         return CategoryDto.builder()
                 .id(category.getId())
                 .name(category.getName())
+                .image(category.getImage())
                 .build();
     }
 }

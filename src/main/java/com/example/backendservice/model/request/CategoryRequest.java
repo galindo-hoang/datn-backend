@@ -8,4 +8,5 @@ import lombok.NoArgsConstructor;
 public class CategoryRequest {
     Long id;
     String name;
+    String image;
 }

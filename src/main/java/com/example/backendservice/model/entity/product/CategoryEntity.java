@@ -21,6 +21,8 @@ public class CategoryEntity extends BaseEntity {
     @Column(unique = true)
     private String name;
 
+    private String image;
+
     @OneToMany(mappedBy = "category", cascade = CascadeType.REMOVE)
     private List<DrugEntity> drugs;
 

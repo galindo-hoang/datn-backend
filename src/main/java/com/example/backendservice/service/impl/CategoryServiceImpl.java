@@ -1,6 +1,7 @@
 package com.example.backendservice.service.impl;
 
 import com.example.backendservice.common.utils.Constants;
+import com.example.backendservice.exception.ResourceInvalidException;
 import com.example.backendservice.exception.ResourceNotFoundException;
 import com.example.backendservice.mapper.CategoryMapper;
 import com.example.backendservice.model.dto.CategoryDto;
@@ -22,9 +23,11 @@ public class CategoryServiceImpl implements CategoryService {
 
     @Override
     public CategoryDto addCategory(CategoryRequest categoryRequest) {
-        System.out.println(categoryRequest);
-        CategoryEntity entity = categoryRepository.save(CategoryMapper.requestToEntity(categoryRequest));
-        return CategoryMapper.entityToDto(entity);
+        if (categoryRepository.findCategoryEntityByName(categoryRequest.getName()).isEmpty()) {
+            return CategoryMapper.entityToDto(categoryRepository.save(CategoryMapper.requestToEntity(categoryRequest)));
+        } else {
+            throw new ResourceInvalidException(Constants.CATEGORY + Constants.EXIST);
+        }
     }
 
     @Override

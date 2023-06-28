@@ -11,6 +11,7 @@ import org.springframework.web.multipart.MultipartFile;
 public class DrugRequest {
     private String drugName;
     private String image;
+    private Long price;
     private String registerNumber;
     private String activeIngredient;
     private String dosageForms;

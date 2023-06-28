@@ -71,7 +71,6 @@ public class DrugServiceImpl implements DrugService {
             drug.addSelf(category);
             drug.setLastModify(new Timestamp(System.currentTimeMillis()));
             DrugEntity sa = drugRepository.save(drug);
-            System.out.printf(sa.toString());
             return DrugMapper.entityToDto(sa);
         }
     }
