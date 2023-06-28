@@ -21,7 +21,7 @@ public class DrugRepositoryCustomImpl implements DrugRepositoryCustom {
     public List<DrugEntity> findDrugsByText(String text, Long offset, Long limit) {
         return new JPAQueryFactory(entityManager)
                 .from(drugEntity)
-                .where(drugEntity.drugName.contains(text))
+                .where(drugEntity.drugName.toLowerCase().contains(text.toLowerCase()))
                 .offset(offset).limit(limit)
                 .orderBy(drugEntity.drugName.asc())
                 .select(drugEntity)
@@ -32,7 +32,7 @@ public class DrugRepositoryCustomImpl implements DrugRepositoryCustom {
     public List<DrugEntity> findAllDrugsByText(String text) {
         return new JPAQueryFactory(entityManager)
                 .from(drugEntity)
-                .where(drugEntity.drugName.contains(text))
+                .where(drugEntity.drugName.toLowerCase().contains(text.toLowerCase()))
                 .orderBy(drugEntity.drugName.asc())
                 .select(drugEntity)
                 .fetch();
@@ -42,6 +42,7 @@ public class DrugRepositoryCustomImpl implements DrugRepositoryCustom {
     public List<DrugEntity> findDrugsByCategory(Long categoryId, Long offset, Long size) {
         return new JPAQueryFactory(entityManager)
                 .from(drugEntity).join(categoryEntity).on(drugEntity.category.id.eq(categoryEntity.id))
+                .where(drugEntity.category.id.eq(categoryId))
                 .offset(offset).limit(size)
                 .orderBy(drugEntity.drugName.asc())
                 .select(drugEntity)

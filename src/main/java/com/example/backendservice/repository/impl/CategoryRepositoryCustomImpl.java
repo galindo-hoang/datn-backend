@@ -20,7 +20,7 @@ public class CategoryRepositoryCustomImpl implements CategoryRepositoryCustom {
     public List<CategoryEntity> findCategoriesByText(String name, Long offset, Long size) {
         return new JPAQueryFactory(entityManager)
                 .from(categoryEntity)
-                .where(categoryEntity.name.contains(name.isBlank() ? name : ""))
+                .where(categoryEntity.name.toLowerCase().contains((name.isBlank() ? name : "").toLowerCase()))
                 .offset(offset).limit(size).orderBy(categoryEntity.name.asc())
                 .select(categoryEntity)
                 .fetch();
@@ -30,7 +30,7 @@ public class CategoryRepositoryCustomImpl implements CategoryRepositoryCustom {
     public List<CategoryEntity> findSizeByText(String name) {
         return new JPAQueryFactory(entityManager)
                 .from(categoryEntity)
-                .where(categoryEntity.name.contains(name))
+                .where(categoryEntity.name.toLowerCase().contains(name.toLowerCase()))
                 .orderBy(categoryEntity.name.asc())
                 .select(categoryEntity)
                 .fetch();
