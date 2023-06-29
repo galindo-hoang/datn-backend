@@ -39,10 +39,10 @@ public class DrugRepositoryCustomImpl implements DrugRepositoryCustom {
     }
 
     @Override
-    public List<DrugEntity> findDrugsByCategory(Long categoryId, Long offset, Long size) {
+    public List<DrugEntity> findDrugsByCategory(String categoryName, Long offset, Long size) {
         return new JPAQueryFactory(entityManager)
                 .from(drugEntity).join(categoryEntity).on(drugEntity.category.id.eq(categoryEntity.id))
-                .where(drugEntity.category.id.eq(categoryId))
+                .where(drugEntity.category.name.toLowerCase().contains(categoryName.toLowerCase()))
                 .offset(offset).limit(size)
                 .orderBy(drugEntity.drugName.asc())
                 .select(drugEntity)

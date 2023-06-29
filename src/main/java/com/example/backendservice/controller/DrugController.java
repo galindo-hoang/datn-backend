@@ -64,14 +64,14 @@ public class DrugController extends BaseController {
 
     @GetMapping(path = "category")
     ResponseEntity<List<DrugDto>> getListDrugsByCategory(
-            @RequestParam Long categoryId,
+            @RequestParam String categoryName,
             @RequestParam(required = false, defaultValue = "0") Long offset,
             @RequestParam(required = false, defaultValue = "20") Long size
     ) {
         return ResponseEntity.status(HttpStatus.OK).body(
                 drugService.findDrugsByCategory(
                         FilterRequest.builder()
-                                .keyRequestId(categoryId)
+                                .keyRequestText(categoryName)
                                 .offset(offset)
                                 .limit(size)
                                 .build()

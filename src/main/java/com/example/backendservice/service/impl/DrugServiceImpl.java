@@ -42,7 +42,7 @@ public class DrugServiceImpl implements DrugService {
     public List<DrugDto> findDrugsByCategory(FilterRequest filter) {
         return drugRepository
                 .findDrugsByCategory(
-                        filter.getKeyRequestId(),
+                        filter.getKeyRequestText(),
                         filter.getOffset(),
                         filter.getLimit()
                 )
