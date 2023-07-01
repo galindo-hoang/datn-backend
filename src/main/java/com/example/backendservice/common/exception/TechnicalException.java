@@ -1,5 +1,14 @@
 package com.example.backendservice.common.exception;
 
+import lombok.Getter;
+import org.springframework.http.HttpStatus;
+
+@Getter
 public class TechnicalException extends RuntimeException {
-    public TechnicalException(String message) {super(message);}
+    private final HttpStatus httpStatus;
+
+    public TechnicalException(HttpStatus httpStatus, String message) {
+        super(message);
+        this.httpStatus = httpStatus;
+    }
 }

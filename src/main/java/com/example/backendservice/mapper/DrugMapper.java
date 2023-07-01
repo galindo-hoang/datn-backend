@@ -19,6 +19,7 @@ public class DrugMapper {
                 .drugStorage(drug.getDrugStorage())
                 .remarks(drug.getRemarks())
                 .label(drug.getLabel())
+                .lastModify(drug.getLastModify().getTime())
                 .build();
     }
 

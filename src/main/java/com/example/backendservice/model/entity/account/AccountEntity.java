@@ -7,10 +7,7 @@ import com.example.backendservice.common.utils.DataAdapter;
 import com.example.backendservice.model.entity.prescription.PrescriptionEntity;
 import com.example.backendservice.model.entity.reminder.ReminderEntity;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import java.sql.Timestamp;
 import java.util.List;
@@ -21,15 +18,15 @@ import java.util.List;
 @Table(name = "account")
 @NoArgsConstructor
 @AllArgsConstructor
+@Builder
 public class AccountEntity extends BaseEntity implements DataAdapter<AccountEntity> {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    @Column(nullable = false, unique = true)
     private String phoneNumber;
     @Column(nullable = false)
     private String password;
-    @Column(nullable = false)
+    @Column(nullable = false, unique = true)
     private String userName;
     private String imagePath;
     private Timestamp birthday;

@@ -1,5 +1,14 @@
 package com.example.backendservice.common.exception;
 
+import lombok.Getter;
+import org.springframework.http.HttpStatus;
+
+@Getter
 public class BusinessException extends RuntimeException {
-    public BusinessException(String message) {super(message);}
+    private final HttpStatus httpStatus;
+
+    public BusinessException(String message) {
+        super(message);
+        this.httpStatus = HttpStatus.BAD_REQUEST;
+    }
 }

@@ -13,4 +13,6 @@ public class Constants {
     static public String defaultValueSize = "20";
     static public String defaultValueOffset = "0";
     static public String defaultValueText = "";
+
+    static public String TOKEN = "token ";
 }

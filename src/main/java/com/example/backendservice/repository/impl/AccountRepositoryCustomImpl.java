@@ -9,8 +9,8 @@ public class AccountRepositoryCustomImpl implements AccountRepositoryCustom {
     @PersistenceContext
     private EntityManager entityManager;
 
-    @Override
-    public AccountEntity findUserByPhoneNumber(String phoneNumber) {
-        return null;
-    }
+//    @Override
+//    public AccountEntity findUserByPhoneNumber(String phoneNumber) {
+//        return null;
+//    }
 }

@@ -1,5 +1,6 @@
 package com.example.backendservice.model.request;
 
+import com.example.backendservice.common.model.SortType;
 import com.example.backendservice.common.utils.TypeFilter;
 import lombok.*;
 
@@ -11,4 +12,6 @@ public class FilterRequest {
     Long keyRequestId;
     Long offset;
     Long limit;
+    SortType typeSort;
+    String sort;
 }

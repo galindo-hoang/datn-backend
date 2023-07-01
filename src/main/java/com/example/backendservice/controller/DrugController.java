@@ -1,6 +1,7 @@
 package com.example.backendservice.controller;
 
 import com.example.backendservice.common.controller.BaseController;
+import com.example.backendservice.common.model.SortType;
 import com.example.backendservice.model.dto.DrugDto;
 import com.example.backendservice.model.request.DrugRequest;
 import com.example.backendservice.model.request.FilterRequest;
@@ -50,14 +51,18 @@ public class DrugController extends BaseController {
     ResponseEntity<List<DrugDto>> getListDrugsByName(
             @RequestParam(required = false, defaultValue = "") String name,
             @RequestParam(required = false, defaultValue = "0") Long offset,
-            @RequestParam(required = false, defaultValue = "20") Long size
+            @RequestParam(required = false, defaultValue = "20") Long size,
+            @RequestParam(required = false, defaultValue = "alphabet") String sortType,
+            @RequestParam(required = false, defaultValue = "asc") String sort
     ) {
         return ResponseEntity.status(HttpStatus.OK).body(
                 drugService.findDrugsByText(
                         FilterRequest.builder()
                                 .keyRequestText(name)
+                                .typeSort(SortType.ALPHABET.name().equalsIgnoreCase(sortType) ? SortType.ALPHABET : SortType.DATE)
                                 .offset(offset)
                                 .limit(size)
+                                .sort(sort)
                                 .build()
                 ));
     }
@@ -66,14 +71,34 @@ public class DrugController extends BaseController {
     ResponseEntity<List<DrugDto>> getListDrugsByCategory(
             @RequestParam String categoryName,
             @RequestParam(required = false, defaultValue = "0") Long offset,
-            @RequestParam(required = false, defaultValue = "20") Long size
+            @RequestParam(required = false, defaultValue = "20") Long size,
+            @RequestParam(required = false, defaultValue = "alphabet") String sortType,
+            @RequestParam(required = false, defaultValue = "asc") String sort
     ) {
         return ResponseEntity.status(HttpStatus.OK).body(
                 drugService.findDrugsByCategory(
                         FilterRequest.builder()
                                 .keyRequestText(categoryName)
+                                .typeSort(SortType.ALPHABET.name().equalsIgnoreCase(sortType) ? SortType.ALPHABET : SortType.DATE)
                                 .offset(offset)
                                 .limit(size)
+                                .sort(sort)
+                                .build()
+                ));
+    }
+
+    @GetMapping(path = "topSearch")
+    ResponseEntity<List<DrugDto>> getDrugsByTopSearch(
+            @RequestParam(required = false, defaultValue = "asc") String sortType,
+            @RequestParam(required = false, defaultValue = "0") Long offset,
+            @RequestParam(required = false, defaultValue = "20") Long size
+    ) {
+        return ResponseEntity.status(HttpStatus.OK).body(
+                drugService.findTopSearchDrugs(
+                        FilterRequest.builder()
+                                .offset(offset)
+                                .limit(size)
+                                .sort(sortType)
                                 .build()
                 ));
     }

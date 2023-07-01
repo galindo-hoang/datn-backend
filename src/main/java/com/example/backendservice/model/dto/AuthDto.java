@@ -1,15 +1,14 @@
 package com.example.backendservice.model.dto;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
-@NoArgsConstructor
 @Getter
 @Setter
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
 public class AuthDto {
-    private String otp;
+//    private String otp;
 
     // login
     private String refreshToken;

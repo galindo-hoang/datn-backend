@@ -20,4 +20,8 @@ public class DrugDto {
     private String label;
     private String remarks;
     private String imagePath;
+    private Long lastModify;
+
+    private Long numberSearch;
+    private Long lastSearch;
 }

@@ -20,4 +20,6 @@ public class AccountRequest {
     private String otp;
 
     private String imageUrl;
+
+    private String refreshToken;
 }

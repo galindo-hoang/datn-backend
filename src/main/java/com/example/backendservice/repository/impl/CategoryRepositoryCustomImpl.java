@@ -2,7 +2,6 @@ package com.example.backendservice.repository.impl;
 
 import com.example.backendservice.model.entity.product.CategoryEntity;
 import com.example.backendservice.repository.CategoryRepositoryCustom;
-import com.querydsl.core.types.OrderSpecifier;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;

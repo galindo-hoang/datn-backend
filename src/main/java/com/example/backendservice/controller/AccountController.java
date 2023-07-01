@@ -7,6 +7,7 @@ import com.example.backendservice.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -32,5 +33,10 @@ public class AccountController extends BaseController {
     @RequestMapping(path = "login", method = POST)
     ResponseEntity<AuthDto> login(@RequestBody AccountRequest accountRequest) {
         return ResponseEntity.status(HttpStatus.OK).body(userService.loginTraditional(accountRequest));
+    }
+
+    @PostMapping(path = "refreshToken")
+    ResponseEntity<AuthDto> refreshToken(@RequestBody AccountRequest accountRequest) {
+        return ResponseEntity.status(HttpStatus.OK).body(userService.refreshToken(accountRequest.getRefreshToken()));
     }
 }
