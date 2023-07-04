@@ -40,6 +40,8 @@ public class DrugServiceImpl implements DrugService {
 
     @Value("${json.file.rawData}")
     private String filePath;
+    @Value("${image.drug.default}")
+    private String defaultImage;
 
     @PostConstruct
     public void hello() {
@@ -54,18 +56,18 @@ public class DrugServiceImpl implements DrugService {
                 CategoryEntity categoryEntity = categoryRepository.save(category);
                 categoryEntity.setDrugs(new ArrayList<>());
                 for (JsonNode drugNode : categoryNode.get("drugs")) {
+                    if (Objects.equals(drugNode.get("image").asText(), "")) continue;
                     try {
-
                         DrugRequest request = DrugRequest.builder()
                                 .categoryId(categoryEntity.getId())
-                                .drugName(drugNode.has("drugName") ? drugNode.get("drugName").asText() : "")
-                                .price(drugNode.has("price") ? drugNode.get("price").asLong() : 0)
-                                .image(drugNode.has("image") ? drugNode.get("image").asText() : "")
-                                .activeIngredient(drugNode.has("interactions") ? drugNode.get("interactions").asText() : "")
-                                .remarks(drugNode.has("indications") ? drugNode.get("indications").asText() : "")
-                                .dosageForms(drugNode.has("dosageForm") ? drugNode.get("dosageForm").asText() : "")
-                                .usageDosage(drugNode.has("dosageForm") ? drugNode.get("dosageForm").asText() : "")
-                                .label(drugNode.has("label") ? drugNode.get("label").asText() : "")
+                                .drugName(drugNode.get("drugName").asText())
+                                .price(drugNode.get("price").asLong())
+                                .image(drugNode.get("image").asText().isBlank() ? defaultImage : drugNode.get("image").asText())
+                                .activeIngredient(drugNode.get("interactions").asText())
+                                .remarks(drugNode.get("indications").asText().isBlank() ? "UnKnown" : drugNode.get("indications").asText())
+                                .dosageForms(drugNode.get("dosageForm").asText().isBlank() ? "UnKnown" : drugNode.get("dosageForm").asText())
+                                .usageDosage(drugNode.get("dosageForm").asText().isBlank() ? "UnKnown" : drugNode.get("dosageForm").asText())
+                                .label(drugNode.get("label").asText().isBlank() ? "Unknown" : drugNode.get("label").asText())
                                 .build();
                         DrugEntity drug = DrugMapper.requestToEntity(request);
                         drug.addSelf(categoryEntity);
@@ -153,6 +155,7 @@ public class DrugServiceImpl implements DrugService {
             CategoryEntity category = categoryRepository.findById(request.getCategoryId())
                     .orElseThrow(() -> new ResourceNotFoundException(Constants.CATEGORY + Constants.NOT_FOUND));
             DrugEntity drug = DrugMapper.requestToEntity(request);
+            if (drug.getDrugName().isBlank()) throw new ResourceInvalidException(Constants.DRUG + Constants.IN_VALID);
             drug.addSelf(category);
             drug.setLastModify(new Timestamp(System.currentTimeMillis()));
             DrugEntity sa = drugRepository.save(drug);
