@@ -9,17 +9,17 @@ import lombok.*;
 @Builder
 public class DrugDto {
     private Long id;
-    private String drugName;
+    private String drugName = "";
     private Long price;
-    private String registerNumber;
-    private String activeIngredient;
-    private String dosageForms;
-    private String usageDosage;
-    private String sideEffects;
-    private String drugStorage;
-    private String label;
-    private String remarks;
-    private String imagePath;
+    private String registerNumber = "";
+    private String activeIngredient = "";
+    private String dosageForms = "";
+    private String usageDosage = "";
+    private String sideEffects = "";
+    private String drugStorage = "";
+    private String label = "";
+    private String remarks = "";
+    private String imagePath = "";
     private Long lastModify;
 
     private Long numberSearch;

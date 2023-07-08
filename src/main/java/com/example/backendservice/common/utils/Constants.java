@@ -15,4 +15,5 @@ public class Constants {
     static public String defaultValueText = "";
 
     static public String TOKEN = "token ";
+    static public String NAME = "name of ";
 }

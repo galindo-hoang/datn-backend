@@ -15,4 +15,6 @@ public interface CategoryService {
     List<CategoryDto> findCategoriesByName(String name, Long offset, Long size);
 
     Long getSize(String name);
+
+    CategoryDto updateCategory(CategoryRequest categoryRequest);
 }

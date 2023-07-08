@@ -22,7 +22,13 @@ public class CategoryController extends BaseController {
 
     @RequestMapping(path = "add", method = POST)
     ResponseEntity<CategoryDto> addCategory(@RequestBody CategoryRequest categoryRequest) {
+        System.out.println(categoryRequest);
         return ResponseEntity.status(HttpStatus.ACCEPTED).body(categoryService.addCategory(categoryRequest));
+    }
+
+    @RequestMapping(path = "update", method = POST)
+    ResponseEntity<CategoryDto> updateCategory(@RequestBody CategoryRequest categoryRequest) {
+        return ResponseEntity.status(HttpStatus.ACCEPTED).body(categoryService.updateCategory(categoryRequest));
     }
 
     @RequestMapping(path = "delete", method = DELETE)
@@ -39,15 +45,15 @@ public class CategoryController extends BaseController {
 
     @GetMapping(path = "multiple")
     ResponseEntity<List<CategoryDto>> getList(
-            @RequestParam(required=false, defaultValue = "") String name,
-            @RequestParam(required=false, defaultValue = "0") Long offSet,
-            @RequestParam(required=false, defaultValue = "20") Long size) {
+            @RequestParam(required = false, defaultValue = "") String name,
+            @RequestParam(required = false, defaultValue = "0") Long offSet,
+            @RequestParam(required = false, defaultValue = "20") Long size) {
         return ResponseEntity.status(HttpStatus.OK).body(categoryService.findCategoriesByName(name, offSet, size));
     }
 
     @GetMapping(path = "size")
     ResponseEntity<Long> getSize(
-            @RequestParam(required=false, defaultValue = "") String text
+            @RequestParam(required = false, defaultValue = "") String text
     ) {
         return ResponseEntity.status(HttpStatus.OK).body(categoryService.getSize(text));
     }

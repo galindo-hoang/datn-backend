@@ -39,13 +39,13 @@ public class AccountEntity extends BaseEntity implements DataAdapter<AccountEnti
     private List<ReminderEntity> reminders;
 
     @Override
-    public AccountEntity merge(AccountEntity oldData, AccountEntity newData) {
-        oldData.setPhoneNumber(newData.getPhoneNumber() != null ? newData.getPhoneNumber() : oldData.getPhoneNumber());
-        oldData.setPassword(newData.getPassword() != null ? newData.getPassword() : oldData.getPassword());
-        oldData.setUserName(newData.getUserName() != null ? newData.getUserName() : oldData.getUserName());
-        oldData.setImagePath(newData.getImagePath() != null ? newData.getImagePath() : oldData.getImagePath());
-        oldData.setBirthday(newData.getBirthday() != null ? newData.getBirthday() : oldData.getBirthday());
+    public AccountEntity merge(AccountEntity newData) {
+        this.setPhoneNumber(newData.getPhoneNumber() != null ? newData.getPhoneNumber() : this.getPhoneNumber());
+        this.setPassword(newData.getPassword() != null ? newData.getPassword() : this.getPassword());
+        this.setUserName(newData.getUserName() != null ? newData.getUserName() : this.getUserName());
+        this.setImagePath(newData.getImagePath() != null ? newData.getImagePath() : this.getImagePath());
+        this.setBirthday(newData.getBirthday() != null ? newData.getBirthday() : this.getBirthday());
 
-        return oldData;
+        return this;
     }
 }

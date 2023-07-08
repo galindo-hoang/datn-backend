@@ -12,8 +12,10 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 
-import static org.springframework.web.bind.annotation.RequestMethod.*;
+import static org.springframework.web.bind.annotation.RequestMethod.DELETE;
+import static org.springframework.web.bind.annotation.RequestMethod.POST;
 
 @RestController
 @RequestMapping("drug")
@@ -26,7 +28,7 @@ public class DrugController extends BaseController {
         return ResponseEntity.status(HttpStatus.ACCEPTED).body(drugService.addDrug(request));
     }
 
-    @RequestMapping(path = "update", method = PUT)
+    @RequestMapping(path = "update", method = POST)
     ResponseEntity<DrugDto> updateDrug(@RequestBody DrugRequest request) {
         return ResponseEntity.status(HttpStatus.ACCEPTED).body(drugService.updateDrug(request));
     }
@@ -45,6 +47,16 @@ public class DrugController extends BaseController {
     ResponseEntity<Object> deleteDrug(@RequestParam Long id) {
         drugService.removeDrug(id);
         return ResponseEntity.status(HttpStatus.NO_CONTENT).body(null);
+    }
+
+    @GetMapping(path = "lastUpdate")
+    ResponseEntity<Map<String, Object>> findLastUpdate(
+            @RequestParam Long startYear,
+            @RequestParam Long startMonth,
+            @RequestParam Long endYear,
+            @RequestParam Long endMonth
+    ) {
+        return ResponseEntity.status(HttpStatus.OK).body(drugService.ListLastUpdate(startYear,startMonth,endYear, endMonth));
     }
 
     @GetMapping(path = "multiple")

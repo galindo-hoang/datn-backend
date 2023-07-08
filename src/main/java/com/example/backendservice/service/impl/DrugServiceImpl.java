@@ -12,6 +12,7 @@ import com.example.backendservice.model.request.DrugRequest;
 import com.example.backendservice.model.request.FilterRequest;
 import com.example.backendservice.repository.CategoryRepository;
 import com.example.backendservice.repository.DrugRepository;
+import com.example.backendservice.repository.ImageRepositoryCustom;
 import com.example.backendservice.repository.TopSearchRepository;
 import com.example.backendservice.service.DrugService;
 import com.fasterxml.jackson.databind.JsonNode;
@@ -25,10 +26,9 @@ import org.springframework.transaction.annotation.Transactional;
 import java.io.File;
 import java.io.IOException;
 import java.sql.Timestamp;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
-import java.util.Optional;
+import java.util.*;
+
+import static com.example.backendservice.common.utils.CodeGeneratorUtils.randomTimeStamp;
 
 @Service
 @RequiredArgsConstructor
@@ -37,6 +37,7 @@ public class DrugServiceImpl implements DrugService {
     private final DrugRepository drugRepository;
     private final CategoryRepository categoryRepository;
     private final TopSearchRepository topSearchRepository;
+    private final ImageRepositoryCustom imageRepositoryCustom;
 
     @Value("${json.file.rawData}")
     private String filePath;
@@ -62,17 +63,17 @@ public class DrugServiceImpl implements DrugService {
                                 .categoryId(categoryEntity.getId())
                                 .drugName(drugNode.get("drugName").asText())
                                 .price(drugNode.get("price").asLong())
-                                .image(drugNode.get("image").asText().isBlank() ? defaultImage : drugNode.get("image").asText())
                                 .activeIngredient(drugNode.get("interactions").asText())
-                                .remarks(drugNode.get("indications").asText().isBlank() ? "UnKnown" : drugNode.get("indications").asText())
-                                .dosageForms(drugNode.get("dosageForm").asText().isBlank() ? "UnKnown" : drugNode.get("dosageForm").asText())
-                                .usageDosage(drugNode.get("dosageForm").asText().isBlank() ? "UnKnown" : drugNode.get("dosageForm").asText())
-                                .label(drugNode.get("label").asText().isBlank() ? "Unknown" : drugNode.get("label").asText())
+                                .remarks(drugNode.get("indications").asText())
+                                .dosageForms(drugNode.get("dosageForm").asText())
+                                .usageDosage(drugNode.get("dosageForm").asText())
+                                .label(drugNode.get("label").asText())
                                 .build();
                         DrugEntity drug = DrugMapper.requestToEntity(request);
+                        drug.setImagePath(drugNode.get("image").asText());
                         drug.addSelf(categoryEntity);
-                        drug.setLastModify(new Timestamp(System.currentTimeMillis()));
-                        DrugEntity sa = drugRepository.save(drug);
+                        drug.setLastModify(randomTimeStamp());
+                        drugRepository.save(drug);
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
@@ -156,6 +157,14 @@ public class DrugServiceImpl implements DrugService {
                     .orElseThrow(() -> new ResourceNotFoundException(Constants.CATEGORY + Constants.NOT_FOUND));
             DrugEntity drug = DrugMapper.requestToEntity(request);
             if (drug.getDrugName().isBlank()) throw new ResourceInvalidException(Constants.DRUG + Constants.IN_VALID);
+            List<DrugEntity> drugExist = drugRepository.findAllDrugsByText(request.getDrugName());
+            if (drugExist.size() != 0) throw new ResourceInvalidException(Constants.DRUG + Constants.EXIST);
+            try {
+                String imagePath = imageRepositoryCustom.uploadImageBase64Cloudinary(request.getImageBase64(), "drug", drug.getDrugName());
+                drug.setImagePath(imagePath);
+            } catch (Throwable e) {
+                e.printStackTrace();
+            }
             drug.addSelf(category);
             drug.setLastModify(new Timestamp(System.currentTimeMillis()));
             DrugEntity sa = drugRepository.save(drug);
@@ -166,9 +175,16 @@ public class DrugServiceImpl implements DrugService {
     @Override
     public DrugDto updateDrug(DrugRequest drug) {
         DrugEntity old = drugRepository.findById(drug.getId()).orElseThrow(() -> new ResourceNotFoundException(Constants.DRUG + Constants.NOT_FOUND));
-        DrugEntity newData = DrugMapper.requestToEntity(drug);
-        DrugEntity mergedData = old.merge(old, newData);
-        return DrugMapper.entityToDto(drugRepository.save(mergedData));
+        DrugEntity parsedData = old.merge(DrugMapper.requestToEntity(drug));
+        if (drug.getImageBase64() != null && !drug.getImageBase64().isBlank()) {
+            try {
+                String imagePath = imageRepositoryCustom.uploadImageBase64Cloudinary(drug.getImageBase64(), "drug", parsedData.getDrugName());
+                parsedData.setImagePath(imagePath);
+            } catch (Throwable e) {
+                e.printStackTrace();
+            }
+        }
+        return DrugMapper.entityToDto(drugRepository.save(parsedData));
     }
 
     @Override
@@ -179,5 +195,10 @@ public class DrugServiceImpl implements DrugService {
     @Override
     public Long getSize(String text) {
         return (long) drugRepository.findAllDrugsByText(text).size();
+    }
+
+    @Override
+    public Map<String, Object> ListLastUpdate(Long startYear, Long startMonth, Long endYear, Long endMonth) {
+        return null;
     }
 }

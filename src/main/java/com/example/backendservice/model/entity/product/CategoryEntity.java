@@ -1,6 +1,7 @@
 package com.example.backendservice.model.entity.product;
 
 import com.example.backendservice.common.model.BaseEntity;
+import com.example.backendservice.common.utils.DataAdapter;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -13,7 +14,7 @@ import java.util.List;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class CategoryEntity extends BaseEntity {
+public class CategoryEntity extends BaseEntity implements DataAdapter<CategoryEntity> {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -26,4 +27,9 @@ public class CategoryEntity extends BaseEntity {
     @OneToMany(mappedBy = "category", cascade = CascadeType.REMOVE)
     private List<DrugEntity> drugs;
 
+    @Override
+    public CategoryEntity merge(CategoryEntity newData) {
+        this.setName(newData.getName() != null ? newData.getName() : this.getName());
+        return this;
+    }
 }

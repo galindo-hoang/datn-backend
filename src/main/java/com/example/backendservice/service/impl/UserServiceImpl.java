@@ -26,7 +26,6 @@ import org.springframework.transaction.annotation.Transactional;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Objects;
 import java.util.Optional;
 
 @Service
@@ -61,25 +60,25 @@ public class UserServiceImpl implements UserService {
     @Override
     public boolean register(AccountRequest accountRequest) {
         if (PhoneNumberUtils.isValid(accountRequest.getPhoneNumber())) {
-            if (checkingExist(accountRequest.getUserName())) return false;
+            if (checkingExist(accountRequest.getUsername())) return false;
 
             String otp = CodeGeneratorUtils.invoke();
             AuthDto authDto = new AuthDto();
 //            authDto.setOtp(otp);
-            register.put(accountRequest.getUserName(), Pair.pair(authDto, accountRequest));
+            register.put(accountRequest.getUsername(), Pair.pair(authDto, accountRequest));
             return true;
         } else throw new ResourceInvalidException(Constants.PHONE + Constants.IN_VALID);
     }
 
     @Override
     public boolean validate(AccountRequest accountRequest) {
-        if (register.containsKey(accountRequest.getUserName())) {
-            AuthDto auth = register.get(accountRequest.getUserName()).first;
-            AccountRequest account = register.get(accountRequest.getUserName()).second;
+        if (register.containsKey(accountRequest.getUsername())) {
+            AuthDto auth = register.get(accountRequest.getUsername()).first;
+            AccountRequest account = register.get(accountRequest.getUsername()).second;
 //            if (!Objects.equals(auth.getOtp(), accountRequest.getOtp())) return false;
             AccountEntity user = accountMapper.requestToEntity(account);
             accountRepository.save(user);
-            register.remove(accountRequest.getUserName());
+            register.remove(accountRequest.getUsername());
             return true;
         } else return false;
     }
@@ -96,7 +95,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public AuthDto loginTraditional(AccountRequest accountRequest) {
-        Optional<AccountEntity> optionUser = accountRepository.findAccountEntityByUserName(accountRequest.getUserName());
+        Optional<AccountEntity> optionUser = accountRepository.findAccountEntityByUserName(accountRequest.getUsername());
         if (optionUser.isPresent() && optionUser.get().getPassword().equals(accountRequest.getPassword())) {
             AccountEntity user = optionUser.get();
             String accessToken = jwtTokenUtil.generateToken(user.getUserName(), JwtTokenUtil.JWT_ACCESS_TOKEN_VALIDITY);

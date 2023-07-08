@@ -1,5 +1,6 @@
 package com.example.backendservice.common.utils;
 
+import java.sql.Timestamp;
 import java.util.Random;
 
 public class CodeGeneratorUtils {
@@ -15,4 +16,12 @@ public class CodeGeneratorUtils {
                 .collect(StringBuilder::new, StringBuilder::appendCodePoint, StringBuilder::append)
                 .toString();
     }
+
+    public static Timestamp randomTimeStamp() {
+        long offset = Timestamp.valueOf("2022-09-09 00:00:00").getTime();
+        long end = Timestamp.valueOf("2023-06-06 00:00:00").getTime();
+        long diff = end - offset + 1;
+        return new Timestamp(offset + (long)(Math.random() * diff));
+    }
+
 }

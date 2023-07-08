@@ -26,7 +26,6 @@ public class DrugMapper {
     public static DrugEntity requestToEntity(DrugRequest drug) {
         return DrugEntity.builder()
                 .drugName(drug.getDrugName())
-                .imagePath(drug.getImage())
                 .price(drug.getPrice())
                 .indications(drug.getActiveIngredient())
                 .registerNumber(drug.getRegisterNumber())

@@ -11,7 +11,7 @@ import java.util.Date;
 @AllArgsConstructor
 @NoArgsConstructor
 public class AccountRequest {
-    private String userName;
+    private String username;
     private String password;
     private String phoneNumber;
     private Genre genre;

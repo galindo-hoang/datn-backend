@@ -7,5 +7,5 @@ import org.springframework.stereotype.Repository;
 import java.util.Optional;
 
 @Repository
-public interface DrugRepository extends JpaRepository<DrugEntity, Long>, DrugRepositoryCustom, ImageRepository {
+public interface DrugRepository extends JpaRepository<DrugEntity, Long>, DrugRepositoryCustom {
 }

@@ -1,7 +1,6 @@
 package com.example.backendservice.model.request;
 
 import lombok.*;
-import org.springframework.web.multipart.MultipartFile;
 
 @Getter
 @Setter
@@ -10,7 +9,7 @@ import org.springframework.web.multipart.MultipartFile;
 @Builder
 public class DrugRequest {
     private String drugName;
-    private String image;
+    private String imageBase64;
     private Long price;
     private String registerNumber;
     private String activeIngredient;

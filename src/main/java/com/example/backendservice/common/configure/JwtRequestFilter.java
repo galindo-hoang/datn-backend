@@ -35,29 +35,21 @@ public class JwtRequestFilter extends OncePerRequestFilter {
             final String requestTokenHeader = request.getHeader("Authorization");
             if (requestTokenHeader != null && requestTokenHeader.startsWith("Bearer")) {
                 String jwtToken = requestTokenHeader.substring("Bearer ".length());
-                try {
-                    String userName = jwtTokenUtil.getUserNameFromToken(jwtToken);
-                    if (userName != null && SecurityContextHolder.getContext().getAuthentication() == null && jwtTokenUtil.validateToken(jwtToken, userName)) {
-                        UserDetails userDetails = this.userService.loadUserByUsername(userName);
-                        filterChain.doFilter(request, response);
-                        UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken = new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
-                        usernamePasswordAuthenticationToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
-                        // After setting the Authentication in the context, we specify
-                        // that the current user is authenticated. So it passes the
-                        // Spring Security Configurations successfully.
-                        SecurityContextHolder.getContext().setAuthentication(usernamePasswordAuthenticationToken);
-                    } else {
-                        response.setStatus(HttpServletResponse.SC_FORBIDDEN);
-                        new ObjectMapper().writeValue(response.getOutputStream(), Constants.TOKEN + Constants.IN_VALID);
-                    }
-                } catch (Exception e) {
-                    response.setHeader("error", e.getMessage());
+                String userName = jwtTokenUtil.getUserNameFromToken(jwtToken);
+                if (userName != null && SecurityContextHolder.getContext().getAuthentication() == null && jwtTokenUtil.validateToken(jwtToken, userName)) {
+                    UserDetails userDetails = this.userService.loadUserByUsername(userName);
+                    filterChain.doFilter(request, response);
+                    UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken = new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
+                    usernamePasswordAuthenticationToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
+                    // After setting the Authentication in the context, we specify
+                    // that the current user is authenticated. So it passes the
+                    // Spring Security Configurations successfully.
+                    SecurityContextHolder.getContext().setAuthentication(usernamePasswordAuthenticationToken);
+                } else {
                     response.setStatus(HttpServletResponse.SC_FORBIDDEN);
-//                    Map<String, String> error = new HashMap<>();
-//                    error.put("error_massage", e.getMessage());
-                    response.setContentType(APPLICATION_JSON_VALUE);
                     new ObjectMapper().writeValue(response.getOutputStream(), Constants.TOKEN + Constants.IN_VALID);
                 }
+
             } else {
                 response.setStatus(HttpServletResponse.SC_FORBIDDEN);
                 response.setContentType(APPLICATION_JSON_VALUE);

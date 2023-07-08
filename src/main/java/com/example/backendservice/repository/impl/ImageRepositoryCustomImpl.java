@@ -1,22 +1,27 @@
 package com.example.backendservice.repository.impl;
 
+import com.cloudinary.utils.ObjectUtils;
+import com.example.backendservice.common.utils.CloudinaryUtils;
 import com.example.backendservice.common.utils.Constants;
 import com.example.backendservice.common.utils.FileUtils;
+import com.example.backendservice.exception.ResourceInvalidException;
 import com.example.backendservice.model.request.ImageRequest;
-import com.example.backendservice.repository.ImageRepository;
+import com.example.backendservice.repository.ImageRepositoryCustom;
 import com.google.auth.Credentials;
 import com.google.auth.oauth2.GoogleCredentials;
 import com.google.cloud.storage.*;
+import org.springframework.stereotype.Repository;
 
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.util.Map;
 import java.util.UUID;
 
-
-public class ImageRepositoryImpl implements ImageRepository {
+@Repository
+public class ImageRepositoryCustomImpl implements ImageRepositoryCustom {
     @Override
     public String uploadImage(ImageRequest imageRequest) {
         String fileName = ((Long) System.currentTimeMillis()).toString().concat(imageRequest.getExtension());
@@ -39,6 +44,30 @@ public class ImageRepositoryImpl implements ImageRepository {
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
+    }
+
+    @Override
+    public String uploadImageBase64Cloudinary(String fileBase64, String type, String fileName) throws IOException {
+        if (fileBase64 == null || fileBase64.isBlank()) throw new ResourceInvalidException("");
+        Map uploadImage = CloudinaryUtils.getInstance().uploader().upload(fileBase64, ObjectUtils.asMap(
+                "public_id", type + "_" + fileName,
+                "folder", type));
+        return String.valueOf(uploadImage.get("secure_url"));
+
+    }
+
+    @Override
+    public String uploadImageRemoteCloudinary(String url, String type, String fileName) throws IOException {
+        if (url.isBlank()) throw new ResourceInvalidException("");
+        Map uploadImage = CloudinaryUtils.getInstance().uploader().upload(new File(url), ObjectUtils.asMap(
+                "public_id", type + "#" + fileName,
+                "folder", type));
+        return String.valueOf(uploadImage.get("secure_url"));
+    }
+
+    @Override
+    public void deleteImageInCloudinary(String url) {
+
     }
 
     private String uploadFile(File file, String fileName, String extension) {

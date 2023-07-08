@@ -7,10 +7,10 @@ create table account
     created_on   timestamp(6),
     image_path   varchar(255),
     password     varchar(255) not null,
-    phone_number varchar(255) not null
-        constraint uk_g4b37bcdq6mmqdp3p67qoatc
+    phone_number varchar(255),
+    user_name    varchar(255) not null
+        constraint uk_f6xpj7h12wr185bqhfi1hqlbr
             unique,
-    user_name    varchar(255) not null,
     user_role    smallint
 );
 
@@ -99,19 +99,6 @@ create table ingredient_drug
 );
 
 alter table ingredient_drug
-    owner to postgres;
-
-create table manufacture
-(
-    id           bigserial
-        primary key,
-    version      bigint,
-    address      varchar(255),
-    name         varchar(255),
-    phone_number varchar(255)
-);
-
-alter table manufacture
     owner to postgres;
 
 create table prescription

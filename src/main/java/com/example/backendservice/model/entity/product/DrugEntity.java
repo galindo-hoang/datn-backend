@@ -18,7 +18,6 @@ public class DrugEntity extends BaseEntity implements DataAdapter<DrugEntity> {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
     private String drugName;
     private String registerNumber;
     private Long price;
@@ -34,7 +33,7 @@ public class DrugEntity extends BaseEntity implements DataAdapter<DrugEntity> {
     private String remarks;
     private String imagePath;
 
-//    @ManyToOne(fetch = FetchType.LAZY)
+    //    @ManyToOne(fetch = FetchType.LAZY)
 //    private ManufactureEntity manufacture;
     @ManyToOne(fetch = FetchType.LAZY)
     private CategoryEntity category;
@@ -58,20 +57,20 @@ public class DrugEntity extends BaseEntity implements DataAdapter<DrugEntity> {
     }
 
     @Override
-    public DrugEntity merge(DrugEntity oldData, DrugEntity newData) {
-        oldData.setDrugName(newData.getDrugName() != null ? newData.getDrugName() : oldData.getDrugName());
-        oldData.setRegisterNumber(newData.getRegisterNumber() != null ? newData.getRegisterNumber() : oldData.getRegisterNumber());
-        oldData.setDosageForm(newData.getDosageForm() != null ? newData.getDosageForm() : oldData.getDosageForm());
-        oldData.setPrice(newData.getPrice() != null ? newData.getPrice() : oldData.getPrice());
-        oldData.setUsageAndDosage(newData.getUsageAndDosage() != null ? newData.getUsageAndDosage() : oldData.getUsageAndDosage());
-        oldData.setIndications(newData.getIndications() != null ? newData.getIndications() : oldData.getIndications());
-        oldData.setContraindications(newData.getContraindications() != null ? newData.getContraindications() : oldData.getContraindications());
-        oldData.setInteractions(newData.getInteractions() != null ? newData.getInteractions() : oldData.getInteractions());
-        oldData.setSideEffects(newData.getSideEffects() != null ? newData.getSideEffects() : oldData.getSideEffects());
-        oldData.setDrugStorage(newData.getDrugStorage() != null ? newData.getDrugStorage() : oldData.getDrugStorage());
-        oldData.setRemarks(newData.getRemarks() != null ? newData.getRemarks() : oldData.getRemarks());
-        oldData.setImagePath(newData.getImagePath() != null ? newData.getImagePath() : oldData.getImagePath());
-        oldData.setLabel(newData.getLabel() != null ? newData.getLabel() : oldData.getLabel());
-        return oldData;
+    public DrugEntity merge(DrugEntity newData) {
+        this.setDrugName(newData.getDrugName() != null ? newData.getDrugName() : this.getDrugName());
+        this.setRegisterNumber(newData.getRegisterNumber() != null ? newData.getRegisterNumber() : this.getRegisterNumber());
+        this.setDosageForm(newData.getDosageForm() != null ? newData.getDosageForm() : this.getDosageForm());
+        this.setPrice(newData.getPrice() != null ? newData.getPrice() : this.getPrice());
+        this.setUsageAndDosage(newData.getUsageAndDosage() != null ? newData.getUsageAndDosage() : this.getUsageAndDosage());
+        this.setIndications(newData.getIndications() != null ? newData.getIndications() : this.getIndications());
+        this.setContraindications(newData.getContraindications() != null ? newData.getContraindications() : this.getContraindications());
+        this.setInteractions(newData.getInteractions() != null ? newData.getInteractions() : this.getInteractions());
+        this.setSideEffects(newData.getSideEffects() != null ? newData.getSideEffects() : this.getSideEffects());
+        this.setDrugStorage(newData.getDrugStorage() != null ? newData.getDrugStorage() : this.getDrugStorage());
+        this.setRemarks(newData.getRemarks() != null ? newData.getRemarks() : this.getRemarks());
+        this.setImagePath(newData.getImagePath() != null ? newData.getImagePath() : this.getImagePath());
+        this.setLabel(newData.getLabel() != null ? newData.getLabel() : this.getLabel());
+        return this;
     }
 }
