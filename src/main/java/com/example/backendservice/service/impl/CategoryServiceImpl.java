@@ -15,6 +15,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.io.IOException;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Objects;
 
@@ -65,7 +66,7 @@ public class CategoryServiceImpl implements CategoryService {
     @Override
     public List<CategoryDto> findCategoriesByName(String name, Long offset, Long size) {
         return categoryRepository.findCategoriesByText(name, offset, size)
-                .stream().map(CategoryMapper::entityToDto).toList();
+                .stream().map(CategoryMapper::entityToDto).sorted(Comparator.comparing(CategoryDto::getName)).toList();
     }
 
     @Override

@@ -202,8 +202,8 @@ public class DrugServiceImpl implements DrugService {
 
     @Override
     public Map<String, Long> ListLastUpdate(Long startYear, Long startMonth, Long endYear, Long endMonth) {
-        String startDate = startYear + "-" + startMonth + "-1";
-        String endDate = endYear + "-" + endMonth + "-1";
+        String startDate = startYear + "-" + startMonth + "-01 00:00:00";
+        String endDate = endYear + "-" + endMonth + "-01 00:00:00";
         Map<String, Long> result = new HashMap<>();
         drugRepository.findLastUpdate(startDate, endDate).forEach(data -> {
             result.put(data.get(0, String.class), data.get(1, Long.class));
