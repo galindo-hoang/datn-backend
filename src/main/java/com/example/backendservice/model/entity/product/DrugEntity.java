@@ -38,22 +38,13 @@ public class DrugEntity extends BaseEntity implements DataAdapter<DrugEntity> {
     @ManyToOne(fetch = FetchType.LAZY)
     private CategoryEntity category;
 
-    public void addSelf(
-//            ManufactureEntity manufacture,
-            CategoryEntity category
-    ) {
-//        manufacture.getDrugs().add(this);
-//        this.manufacture = manufacture;
+    public void addSelf(CategoryEntity category) {
         category.getDrugs().add(this);
         this.category = category;
     }
 
-    public void removeSelf(
-//            ManufactureEntity manufacture,
-            CategoryEntity category
-    ) {
-//        manufacture.getDrugs().remove(this);
-        category.getDrugs().remove(this);
+    public void removeSelf() {
+        this.category.getDrugs().remove(this);
     }
 
     @Override

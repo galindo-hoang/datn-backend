@@ -8,4 +8,5 @@ import java.util.Optional;
 
 @Repository
 public interface DrugRepository extends JpaRepository<DrugEntity, Long>, DrugRepositoryCustom {
+    Optional<DrugEntity> findDrugEntityById(Long id);
 }

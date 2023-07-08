@@ -4,12 +4,14 @@ import com.example.backendservice.common.model.SortType;
 import com.example.backendservice.model.entity.product.DrugEntity;
 import com.example.backendservice.repository.DrugRepositoryCustom;
 import com.querydsl.core.Tuple;
+import com.querydsl.core.types.Expression;
 import com.querydsl.core.types.OrderSpecifier;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import org.springframework.stereotype.Repository;
 
+import java.sql.Timestamp;
 import java.util.List;
 
 import static com.example.backendservice.model.entity.product.QCategoryEntity.categoryEntity;
@@ -61,6 +63,20 @@ public class DrugRepositoryCustomImpl implements DrugRepositoryCustom {
                 .orderBy(asc ? topSearchDrugEntity.count.asc() : topSearchDrugEntity.count.desc())
                 .select(drugEntity, topSearchDrugEntity.count, topSearchDrugEntity.lastSearch)
                 .fetch();
+    }
+
+    @Override
+    public List<Tuple> findLastUpdate(String startDate, String endDate) {
+        Expression<String> yearMonth = drugEntity.lastModify.year().stringValue().concat("-").concat(drugEntity.lastModify.month().stringValue());
+
+        List<Tuple> results = new JPAQueryFactory(entityManager)
+                .from(drugEntity)
+                .where(drugEntity.lastModify.goe(Timestamp.valueOf(startDate))
+                        .and(drugEntity.lastModify.lt(Timestamp.valueOf(endDate))))
+                .groupBy(drugEntity.lastModify.year(), drugEntity.lastModify.month())
+                .select(yearMonth, drugEntity.count())
+                .fetch();
+        return results;
     }
 
     private OrderSpecifier getTypeSort(SortType typeSort, Boolean asc) {

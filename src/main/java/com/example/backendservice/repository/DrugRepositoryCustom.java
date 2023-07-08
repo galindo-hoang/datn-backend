@@ -5,6 +5,7 @@ import com.example.backendservice.model.entity.product.DrugEntity;
 import com.querydsl.core.Tuple;
 
 import java.util.List;
+import java.util.Map;
 
 public interface DrugRepositoryCustom {
     List<DrugEntity> findDrugsByText(String text, Long offset, Long size, SortType typeSort, Boolean asc);
@@ -15,4 +16,5 @@ public interface DrugRepositoryCustom {
 
     List<Tuple> findTopSearch(Long offset, Long size, Boolean asc);
 
+    List<Tuple> findLastUpdate(String startDate, String endDate);
 }

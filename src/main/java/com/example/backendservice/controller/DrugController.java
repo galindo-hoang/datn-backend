@@ -50,7 +50,7 @@ public class DrugController extends BaseController {
     }
 
     @GetMapping(path = "lastUpdate")
-    ResponseEntity<Map<String, Object>> findLastUpdate(
+    ResponseEntity<Map<String, Long>> findLastUpdate(
             @RequestParam Long startYear,
             @RequestParam Long startMonth,
             @RequestParam Long endYear,

@@ -6,7 +6,6 @@ import com.example.backendservice.model.request.FilterRequest;
 
 import java.util.List;
 import java.util.Map;
-import java.util.Objects;
 
 public interface DrugService {
     List<DrugDto> findDrugsByText(FilterRequest filter);
@@ -25,5 +24,5 @@ public interface DrugService {
 
     Long getSize(String name);
 
-    Map<String, Object> ListLastUpdate(Long startYear, Long startMonth, Long endYear, Long endMonth);
+    Map<String, Long> ListLastUpdate(Long startYear, Long startMonth, Long endYear, Long endMonth);
 }

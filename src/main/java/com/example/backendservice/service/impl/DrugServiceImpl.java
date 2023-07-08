@@ -54,8 +54,8 @@ public class DrugServiceImpl implements DrugService {
                         .name(categoryNode.has("name") ? categoryNode.get("name").asText() : "")
                         .image(categoryNode.has("icon") ? categoryNode.get("icon").asText() : "")
                         .build();
+                category.setDrugs(new ArrayList<>());
                 CategoryEntity categoryEntity = categoryRepository.save(category);
-                categoryEntity.setDrugs(new ArrayList<>());
                 for (JsonNode drugNode : categoryNode.get("drugs")) {
                     if (Objects.equals(drugNode.get("image").asText(), "")) continue;
                     try {
@@ -189,8 +189,11 @@ public class DrugServiceImpl implements DrugService {
 
     @Override
     public void removeDrug(Long drugId) {
+        DrugEntity drug = drugRepository.findDrugEntityById(drugId).orElseThrow(() -> new ResourceNotFoundException(Constants.DRUG + Constants.NOT_FOUND));
+        drug.removeSelf();
         drugRepository.deleteById(drugId);
     }
+
 
     @Override
     public Long getSize(String text) {
@@ -198,7 +201,13 @@ public class DrugServiceImpl implements DrugService {
     }
 
     @Override
-    public Map<String, Object> ListLastUpdate(Long startYear, Long startMonth, Long endYear, Long endMonth) {
-        return null;
+    public Map<String, Long> ListLastUpdate(Long startYear, Long startMonth, Long endYear, Long endMonth) {
+        String startDate = startYear + "-" + startMonth + "-1";
+        String endDate = endYear + "-" + endMonth + "-1";
+        Map<String, Long> result = new HashMap<>();
+        drugRepository.findLastUpdate(startDate, endDate).forEach(data -> {
+            result.put(data.get(0, String.class), data.get(1, Long.class));
+        });
+        return result;
     }
 }
