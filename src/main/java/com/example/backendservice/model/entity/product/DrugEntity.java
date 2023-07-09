@@ -23,7 +23,7 @@ public class DrugEntity extends BaseEntity implements DataAdapter<DrugEntity> {
     private Long price;
     private String dosageForm;
     private String usageAndDosage;
-    private String indications;
+//    private String indications;
     private String contraindications;
     private String interactions; // activate-Ingredient
     private String sideEffects;
@@ -33,8 +33,6 @@ public class DrugEntity extends BaseEntity implements DataAdapter<DrugEntity> {
     private String remarks;
     private String imagePath;
 
-    //    @ManyToOne(fetch = FetchType.LAZY)
-//    private ManufactureEntity manufacture;
     @ManyToOne(fetch = FetchType.LAZY)
     private CategoryEntity category;
 
@@ -54,7 +52,7 @@ public class DrugEntity extends BaseEntity implements DataAdapter<DrugEntity> {
         this.setDosageForm(newData.getDosageForm() != null ? newData.getDosageForm() : this.getDosageForm());
         this.setPrice(newData.getPrice() != null ? newData.getPrice() : this.getPrice());
         this.setUsageAndDosage(newData.getUsageAndDosage() != null ? newData.getUsageAndDosage() : this.getUsageAndDosage());
-        this.setIndications(newData.getIndications() != null ? newData.getIndications() : this.getIndications());
+//        this.setIndications(newData.getIndications() != null ? newData.getIndications() : this.getIndications());
         this.setContraindications(newData.getContraindications() != null ? newData.getContraindications() : this.getContraindications());
         this.setInteractions(newData.getInteractions() != null ? newData.getInteractions() : this.getInteractions());
         this.setSideEffects(newData.getSideEffects() != null ? newData.getSideEffects() : this.getSideEffects());
