@@ -1,15 +1,18 @@
 package com.example.backendservice.repository.impl;
 
+import com.cloudinary.Cloudinary;
 import com.cloudinary.utils.ObjectUtils;
 import com.example.backendservice.common.utils.CloudinaryUtils;
 import com.example.backendservice.common.utils.Constants;
 import com.example.backendservice.common.utils.FileUtils;
 import com.example.backendservice.exception.ResourceInvalidException;
+import com.example.backendservice.model.entity.product.ImageEntity;
 import com.example.backendservice.model.request.ImageRequest;
 import com.example.backendservice.repository.ImageRepositoryCustom;
 import com.google.auth.Credentials;
 import com.google.auth.oauth2.GoogleCredentials;
 import com.google.cloud.storage.*;
+import com.google.gson.Gson;
 import org.springframework.stereotype.Repository;
 
 import java.io.File;
@@ -17,6 +20,8 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
@@ -68,6 +73,19 @@ public class ImageRepositoryCustomImpl implements ImageRepositoryCustom {
     @Override
     public void deleteImageInCloudinary(String url) {
 
+    }
+
+    @Override
+    public List<ImageEntity> getImages(Map options) {
+        Cloudinary instance = CloudinaryUtils.getInstance();
+        Gson gson = new Gson();
+        try {
+            ArrayList<Map<String, Object>> images = (ArrayList<Map<String, Object>>) instance.api().resources(options).values().stream().toList().get(0);
+            return images.stream().map(image -> gson.fromJson(gson.toJson(image), ImageEntity.class)).toList();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 
     private String uploadFile(File file, String fileName, String extension) {

@@ -48,7 +48,7 @@ public class DrugServiceImpl implements DrugService {
     @Value("${image.drug.default}")
     private String defaultImage;
 
-    @PostConstruct
+//    @PostConstruct
     public void hello() {
         try {
             ObjectMapper objectMapper = new ObjectMapper();
