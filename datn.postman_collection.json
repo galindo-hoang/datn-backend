@@ -13,10 +13,16 @@
 					"name": "add Drug",
 					"request": {
 						"method": "POST",
-						"header": [],
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhZG1pbiIsImlhdCI6MTY4ODU2OTEzMywiZXhwIjoxNjg4NTg3MTMzfQ.cehr9Sv7_EbuRdV_GX463Ipk5mQyNpoFObVQHYy_7z8",
+								"type": "text"
+							}
+						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"categoryId\": 1,\n    \"drugName\": \"aaba\",\n    \"image\": \"b\",\n    \"registerNumber\": \"c\",\n    \"activeIngredient\": \"d\",\n    \"dosageForms\": \"e\", \n    \"usageDosage\": \"f\",\n    \"sideEffects\": \"g\",\n    \"drugStorage\": \"h\",\n    \"remarks\": \"k\",\n    \"label\": \"label\"\n}",
+							"raw": "{\n    \"categoryId\": 1,\n    \"drugName\": \"aaba\",\n    \"price\": 30000,\n    \"imageBase64\": \"b\",\n    \"registerNumber\": \"c\",\n    \"activeIngredient\": \"d\",\n    \"dosageForms\": \"e\", \n    \"usageDosage\": \"f\",\n    \"sideEffects\": \"g\",\n    \"drugStorage\": \"h\",\n    \"remarks\": \"k\",\n    \"label\": \"label\"\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -24,12 +30,13 @@
 							}
 						},
 						"url": {
-							"raw": "http://localhost:8080/drug/add",
-							"protocol": "http",
+							"raw": "https://datn-backend.herokuapp.com/drug/add",
+							"protocol": "https",
 							"host": [
-								"localhost"
+								"datn-backend",
+								"herokuapp",
+								"com"
 							],
-							"port": "8080",
 							"path": [
 								"drug",
 								"add"
@@ -45,7 +52,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"drugName\": \"a\",\n    \"image\": \"b\",\n    \"registerNumber\": \"c\",\n    \"activeIngredient\": \"d\",\n    \"dosageForms\": \"e\", \n    \"usageDosage\": \"f\",\n    \"sideEffects\": \"g\",\n    \"drugStorage\": \"h\",\n    \"remarks\": \"k\",\n    \"label\": \"label\"\n}",
+							"raw": "{\n    \"drugName\": \"a\",\n    \"imageBase64\": \"b\",\n    \"registerNumber\": \"c\",\n    \"activeIngredient\": \"d\",\n    \"dosageForms\": \"e\", \n    \"usageDosage\": \"f\",\n    \"sideEffects\": \"g\",\n    \"drugStorage\": \"h\",\n    \"remarks\": \"k\",\n    \"label\": \"label\",\n    \"price\": 30000\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -74,7 +81,7 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "https://datn-backend.herokuapp.com/drug?id=1",
+							"raw": "https://datn-backend.herokuapp.com/drug?id=88",
 							"protocol": "https",
 							"host": [
 								"datn-backend",
@@ -87,7 +94,7 @@
 							"query": [
 								{
 									"key": "id",
-									"value": "1"
+									"value": "88"
 								}
 							]
 						}
@@ -127,31 +134,45 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "http://localhost:8080/drug/multiple?name=aa&offset=1&size=2",
-							"protocol": "http",
+							"raw": "https://datn-backend.herokuapp.com/drug/multiple?size=50",
+							"protocol": "https",
 							"host": [
-								"localhost"
+								"datn-backend",
+								"herokuapp",
+								"com"
 							],
-							"port": "8080",
 							"path": [
 								"drug",
 								"multiple"
 							],
 							"query": [
 								{
-									"key": "name",
-									"value": "aa",
-									"description": "default empty"
-								},
-								{
 									"key": "offset",
-									"value": "1",
-									"description": "default 0"
+									"value": "10",
+									"description": "default 0",
+									"disabled": true
 								},
 								{
 									"key": "size",
-									"value": "2",
+									"value": "50",
 									"description": "default 20"
+								},
+								{
+									"key": "sortType ",
+									"value": "date",
+									"description": "\"date\" and \"alphabet\" (default \"alphabet\")",
+									"disabled": true
+								},
+								{
+									"key": "sort",
+									"value": "",
+									"description": "\"asc\" and \"desc\" (default \"asc\")",
+									"disabled": true
+								},
+								{
+									"key": "name",
+									"value": "",
+									"disabled": true
 								}
 							]
 						}
@@ -164,29 +185,30 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "http://localhost:8080/drug/multiple?categoryId=1&offset=1&size=2",
-							"protocol": "http",
+							"raw": "https://datn-backend.herokuapp.com/drug/category?categoryName=Thuốc kháng viêm&offset=&size=20",
+							"protocol": "https",
 							"host": [
-								"localhost"
+								"datn-backend",
+								"herokuapp",
+								"com"
 							],
-							"port": "8080",
 							"path": [
 								"drug",
-								"multiple"
+								"category"
 							],
 							"query": [
 								{
-									"key": "categoryId",
-									"value": "1"
+									"key": "categoryName",
+									"value": "Thuốc kháng viêm"
 								},
 								{
 									"key": "offset",
-									"value": "1",
+									"value": "",
 									"description": "default 0"
 								},
 								{
 									"key": "size",
-									"value": "2",
+									"value": "20",
 									"description": "default 20"
 								}
 							]
@@ -200,7 +222,34 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "http://localhost:8080/drug/size?text=a",
+							"raw": "https://datn-backend.herokuapp.com/drug/size",
+							"protocol": "https",
+							"host": [
+								"datn-backend",
+								"herokuapp",
+								"com"
+							],
+							"path": [
+								"drug",
+								"size"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "top search",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhZG1pbiIsImlhdCI6MTY4ODU2OTEzMywiZXhwIjoxNjg4NTg3MTMzfQ.cehr9Sv7_EbuRdV_GX463Ipk5mQyNpoFObVQHYy_7z8",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "http://localhost:8080/drug/topSearch?sortType=desc&offset=0&size=8",
 							"protocol": "http",
 							"host": [
 								"localhost"
@@ -208,13 +257,61 @@
 							"port": "8080",
 							"path": [
 								"drug",
-								"size"
+								"topSearch"
 							],
 							"query": [
 								{
-									"key": "text",
-									"value": "a",
-									"description": "default empty"
+									"key": "sortType",
+									"value": "desc",
+									"description": "\"asc\" and \"desc\" (default \"asc\")"
+								},
+								{
+									"key": "offset",
+									"value": "0",
+									"description": "default 0"
+								},
+								{
+									"key": "size",
+									"value": "8",
+									"description": "default 20"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "last update",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/drug/lastUpdate?startYear=2022&startMonth=10&endYear=2023&endMonth=4",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"drug",
+								"lastUpdate"
+							],
+							"query": [
+								{
+									"key": "startYear",
+									"value": "2022"
+								},
+								{
+									"key": "startMonth",
+									"value": "10"
+								},
+								{
+									"key": "endYear",
+									"value": "2023"
+								},
+								{
+									"key": "endMonth",
+									"value": "4"
 								}
 							]
 						}
@@ -230,10 +327,16 @@
 					"name": "add",
 					"request": {
 						"method": "POST",
-						"header": [],
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhZG1pbiIsImlhdCI6MTY4ODgxMDQ4NywiZXhwIjoxNjg4ODI4NDg3fQ.v8Xz0OZa9PB0jENZ7o3yRsrbTSm9Skz2Bk4jJmR8Q70",
+								"type": "text"
+							}
+						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"name\": \"Thuốc kháng dị ứng\"\n}",
+							"raw": "{\n    \"name\": \"Thuốc kháng di chứngggg\",\n    \"imageBase64\": \"url\"\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -256,6 +359,35 @@
 					"response": []
 				},
 				{
+					"name": "update cate",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"id\":3,\n    \"name\": \"Thuốc kháng di chứngggg\",\n    \"imageBase64\": \"url\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8080/category/update",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"category",
+								"update"
+							]
+						}
+					},
+					"response": []
+				},
+				{
 					"name": "delete",
 					"request": {
 						"method": "DELETE",
@@ -270,12 +402,13 @@
 							}
 						},
 						"url": {
-							"raw": "http://localhost:8080/category/delete",
-							"protocol": "http",
+							"raw": "https://datn-backend.herokuapp.com/category/delete",
+							"protocol": "https",
 							"host": [
-								"localhost"
+								"datn-backend",
+								"herokuapp",
+								"com"
 							],
-							"port": "8080",
 							"path": [
 								"category",
 								"delete"
@@ -290,12 +423,13 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "http://localhost:8080/category?id=1",
-							"protocol": "http",
+							"raw": "https://datn-backend.herokuapp.com/category?id=1",
+							"protocol": "https",
 							"host": [
-								"localhost"
+								"datn-backend",
+								"herokuapp",
+								"com"
 							],
-							"port": "8080",
 							"path": [
 								"category"
 							],
@@ -315,30 +449,30 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "http://localhost:8080/category/multiple?name=name&size=11&offset=1",
-							"protocol": "http",
+							"raw": "https://datn-backend.herokuapp.com/category/multiple?size=&name=&offset=0",
+							"protocol": "https",
 							"host": [
-								"localhost"
+								"datn-backend",
+								"herokuapp",
+								"com"
 							],
-							"port": "8080",
 							"path": [
 								"category",
 								"multiple"
 							],
 							"query": [
 								{
-									"key": "name",
-									"value": "name",
-									"description": "default empty"
-								},
-								{
 									"key": "size",
-									"value": "11",
+									"value": "",
 									"description": "default 20"
 								},
 								{
+									"key": "name",
+									"value": ""
+								},
+								{
 									"key": "offset",
-									"value": "1",
+									"value": "0",
 									"description": "default 0"
 								}
 							]
@@ -352,21 +486,53 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "http://localhost:8080/category/size?text=text",
-							"protocol": "http",
+							"raw": "https://datn-backend.herokuapp.com/category/size",
+							"protocol": "https",
 							"host": [
-								"localhost"
+								"datn-backend",
+								"herokuapp",
+								"com"
 							],
-							"port": "8080",
 							"path": [
 								"category",
 								"size"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "prescription",
+			"item": [
+				{
+					"name": "get Images",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "https://datn-backend.herokuapp.com/prescription/multiple?size&offset",
+							"protocol": "https",
+							"host": [
+								"datn-backend",
+								"herokuapp",
+								"com"
+							],
+							"path": [
+								"prescription",
+								"multiple"
 							],
 							"query": [
 								{
-									"key": "text",
-									"value": "text",
-									"description": "default empty"
+									"key": "size",
+									"value": null,
+									"description": "default 20"
+								},
+								{
+									"key": "offset",
+									"value": null,
+									"description": "default 0"
 								}
 							]
 						}
@@ -376,43 +542,53 @@
 			]
 		},
 		{
-			"name": "scan",
+			"name": "account",
 			"item": [
 				{
-					"name": "upload",
+					"name": "login",
 					"request": {
-						"method": "GET",
+						"method": "POST",
 						"header": [],
-						"url": {
-							"raw": "https://datn-backend.herokuapp.com/scan/upload?image=file image",
-							"protocol": "https",
-							"host": [
-								"datn-backend",
-								"herokuapp",
-								"com"
-							],
-							"path": [
-								"scan",
-								"upload"
-							],
-							"query": [
-								{
-									"key": "image",
-									"value": "file image",
-									"description": "MultipartFile"
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"username\": \"admin\",\n    \"password\": \"admin\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
 								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8080/user/login",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"user",
+								"login"
 							]
 						}
 					},
 					"response": []
 				},
 				{
-					"name": "download (in test)",
+					"name": "refreshToken",
 					"request": {
-						"method": "GET",
+						"method": "POST",
 						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"refreshToken\": \"eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhZG1pbiIsImlhdCI6MTY4ODI0Mzg5OCwiZXhwIjoxNjg4MjYxODk4fQ.SRP697ec4fxymVXliIkaC508seBozM-qGZVL16H3WeE\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
 						"url": {
-							"raw": "https://datn-backend.herokuapp.com/scan/download",
+							"raw": "https://datn-backend.herokuapp.com/user/refreshToken",
 							"protocol": "https",
 							"host": [
 								"datn-backend",
@@ -420,8 +596,8 @@
 								"com"
 							],
 							"path": [
-								"scan",
-								"download"
+								"user",
+								"refreshToken"
 							]
 						}
 					},
