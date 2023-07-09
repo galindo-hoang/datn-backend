@@ -5,6 +5,7 @@ import com.example.backendservice.exception.ResourceInvalidException;
 import com.example.backendservice.exception.ResourceNotFoundException;
 import com.example.backendservice.mapper.DrugMapper;
 import com.example.backendservice.model.dto.DrugDto;
+import com.example.backendservice.model.dto.LastModifyDto;
 import com.example.backendservice.model.entity.product.CategoryEntity;
 import com.example.backendservice.model.entity.product.DrugEntity;
 import com.example.backendservice.model.entity.product.TopSearchDrugEntity;
@@ -26,6 +27,9 @@ import org.springframework.transaction.annotation.Transactional;
 import java.io.File;
 import java.io.IOException;
 import java.sql.Timestamp;
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.*;
 
 import static com.example.backendservice.common.utils.CodeGeneratorUtils.randomTimeStamp;
@@ -201,13 +205,19 @@ public class DrugServiceImpl implements DrugService {
     }
 
     @Override
-    public Map<String, Long> ListLastUpdate(Long startYear, Long startMonth, Long endYear, Long endMonth) {
+    public List<LastModifyDto> ListLastUpdate(Long startYear, Long startMonth, Long endYear, Long endMonth) {
         String startDate = startYear + "-" + startMonth + "-01 00:00:00";
         String endDate = endYear + "-" + endMonth + "-01 00:00:00";
-        Map<String, Long> result = new HashMap<>();
+        List<LastModifyDto> result = new ArrayList<>();
         drugRepository.findLastUpdate(startDate, endDate).forEach(data -> {
-            result.put(data.get(0, String.class), data.get(1, Long.class));
+            try {
+                DateFormat formatter = new SimpleDateFormat("yyyy-MM");
+                Date date = formatter.parse(data.get(0,String.class));
+                result.add(new LastModifyDto(date.getTime(), data.get(1, Long.class)));
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
         });
-        return result;
+        return result.stream().sorted(Comparator.comparingLong(LastModifyDto::getMonthYear)).toList();
     }
 }

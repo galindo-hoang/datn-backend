@@ -3,6 +3,7 @@ package com.example.backendservice.controller;
 import com.example.backendservice.common.controller.BaseController;
 import com.example.backendservice.common.model.SortType;
 import com.example.backendservice.model.dto.DrugDto;
+import com.example.backendservice.model.dto.LastModifyDto;
 import com.example.backendservice.model.request.DrugRequest;
 import com.example.backendservice.model.request.FilterRequest;
 import com.example.backendservice.service.DrugService;
@@ -12,7 +13,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Map;
 
 import static org.springframework.web.bind.annotation.RequestMethod.DELETE;
 import static org.springframework.web.bind.annotation.RequestMethod.POST;
@@ -50,7 +50,7 @@ public class DrugController extends BaseController {
     }
 
     @GetMapping(path = "lastUpdate")
-    ResponseEntity<Map<String, Long>> findLastUpdate(
+    ResponseEntity<List<LastModifyDto>> findLastUpdate(
             @RequestParam Long startYear,
             @RequestParam Long startMonth,
             @RequestParam Long endYear,
