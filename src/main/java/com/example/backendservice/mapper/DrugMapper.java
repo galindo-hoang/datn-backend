@@ -20,6 +20,7 @@ public class DrugMapper {
                 .remarks(drug.getRemarks())
                 .label(drug.getLabel())
                 .lastModify(drug.getLastModify().getTime())
+                .categoryId(drug.getCategory().getId())
                 .build();
     }
 

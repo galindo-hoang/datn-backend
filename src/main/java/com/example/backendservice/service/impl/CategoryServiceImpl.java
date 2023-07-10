@@ -17,6 +17,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.io.IOException;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 
 @Service
@@ -34,8 +35,8 @@ public class CategoryServiceImpl implements CategoryService {
             if (categoryRepository.findCategoryEntityByName(categoryRequest.getName()).isEmpty()) {
                 CategoryEntity category = CategoryMapper.requestToEntity(categoryRequest);
                 try {
-                    String imagePath = imageRepositoryCustom.uploadImageBase64Cloudinary(categoryRequest.getImageBase64(), "category", categoryRequest.getName());
-                    category.setImage(imagePath);
+                    Map image = imageRepositoryCustom.uploadImageBase64Cloudinary(categoryRequest.getImageBase64(), "category", categoryRequest.getName());
+                    category.setImage(String.valueOf(image.get("secure_url")));
                 } catch (Throwable e) {
                     e.printStackTrace();
                 }
@@ -82,8 +83,8 @@ public class CategoryServiceImpl implements CategoryService {
             CategoryEntity oldCategory = categoryRepository.findById(categoryRequest.getId()).orElseThrow(() -> new ResourceNotFoundException(Constants.CATEGORY + Constants.NOT_FOUND));
             CategoryEntity parsedCategory = oldCategory.merge(CategoryMapper.requestToEntity(categoryRequest));
             try {
-                String image = imageRepositoryCustom.uploadImageBase64Cloudinary(categoryRequest.getImageBase64(), "category", parsedCategory.getName());
-                parsedCategory.setImage(image);
+                Map image = imageRepositoryCustom.uploadImageBase64Cloudinary(categoryRequest.getImageBase64(), "category", parsedCategory.getName());
+                parsedCategory.setImage(String.valueOf(image.get("secure_url")));
             } catch (IOException e) {
                 e.printStackTrace();
             }

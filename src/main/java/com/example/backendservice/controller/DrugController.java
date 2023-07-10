@@ -3,7 +3,7 @@ package com.example.backendservice.controller;
 import com.example.backendservice.common.controller.BaseController;
 import com.example.backendservice.common.model.SortType;
 import com.example.backendservice.model.dto.DrugDto;
-import com.example.backendservice.model.dto.LastModifyDto;
+import com.example.backendservice.model.dto.LastUpload;
 import com.example.backendservice.model.request.DrugRequest;
 import com.example.backendservice.model.request.FilterRequest;
 import com.example.backendservice.service.DrugService;
@@ -49,8 +49,9 @@ public class DrugController extends BaseController {
         return ResponseEntity.status(HttpStatus.NO_CONTENT).body(null);
     }
 
+    // remove
     @GetMapping(path = "lastUpdate")
-    ResponseEntity<List<LastModifyDto>> findLastUpdate(
+    ResponseEntity<List<LastUpload>> findLastUpdate(
             @RequestParam Long startYear,
             @RequestParam Long startMonth,
             @RequestParam Long endYear,

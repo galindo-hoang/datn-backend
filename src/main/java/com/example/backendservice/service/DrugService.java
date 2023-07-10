@@ -1,7 +1,7 @@
 package com.example.backendservice.service;
 
 import com.example.backendservice.model.dto.DrugDto;
-import com.example.backendservice.model.dto.LastModifyDto;
+import com.example.backendservice.model.dto.LastUpload;
 import com.example.backendservice.model.request.DrugRequest;
 import com.example.backendservice.model.request.FilterRequest;
 
@@ -24,5 +24,5 @@ public interface DrugService {
 
     Long getSize(String name);
 
-    List<LastModifyDto> ListLastUpdate(Long startYear, Long startMonth, Long endYear, Long endMonth);
+    List<LastUpload> ListLastUpdate(Long startYear, Long startMonth, Long endYear, Long endMonth);
 }

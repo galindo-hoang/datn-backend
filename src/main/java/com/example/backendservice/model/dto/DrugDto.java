@@ -24,4 +24,5 @@ public class DrugDto {
 
     private Long numberSearch;
     private Long lastSearch;
+    private Long categoryId;
 }

@@ -2,7 +2,7 @@ package com.example.backendservice.model.entity.reminder;
 
 import com.example.backendservice.common.model.BaseEntity;
 import com.example.backendservice.model.entity.account.AccountEntity;
-import com.example.backendservice.model.entity.prescription.PrescriptionDrugEntity;
+import com.example.backendservice.model.entity.prescription.PrescriptionEntity;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -27,27 +27,27 @@ public class ReminderEntity extends BaseEntity {
     private Double beforeMinus;
     private Double interval;
     private Boolean active;
-    @OneToMany(mappedBy = "reminder", cascade = CascadeType.ALL)
-    private List<PrescriptionDrugEntity> prescriptionDrugs;
-    @ManyToOne(fetch = FetchType.LAZY)
-    private AccountEntity user;
+//    @OneToMany(mappedBy = "reminder", cascade = CascadeType.ALL)
+//    private List<PrescriptionEntity> prescriptionDrugs;
+//    @ManyToOne(fetch = FetchType.LAZY)
+//    private AccountEntity user;
 
 
-    public void addSelf(PrescriptionDrugEntity prescriptionDrug, AccountEntity user) {
-        prescriptionDrug.setReminder(this);
-        prescriptionDrugs.add(prescriptionDrug);
-        user.getReminders().add(this);
-        this.user = user;
+    public void addSelf(PrescriptionEntity prescriptionDrug, AccountEntity user) {
+//        prescriptionDrug.setReminder(this);
+//        prescriptionDrugs.add(prescriptionDrug);
+//        user.getReminders().add(this);
+//        this.user = user;
     }
 
     public void removeSelf(AccountEntity user) {
-        while (!prescriptionDrugs.isEmpty()) {
-            PrescriptionDrugEntity tmp = prescriptionDrugs.get(0);
-            prescriptionDrugs.remove(0);
-            tmp.setReminder(null);
-        }
-        user.getReminders().remove(this);
-        this.user = null;
+//        while (!prescriptionDrugs.isEmpty()) {
+//            PrescriptionEntity tmp = prescriptionDrugs.get(0);
+//            prescriptionDrugs.remove(0);
+//            tmp.setReminder(null);
+//        }
+//        user.getReminders().remove(this);
+//        this.user = null;
     }
 
 }

@@ -33,10 +33,8 @@ public class AccountEntity extends BaseEntity implements DataAdapter<AccountEnti
     private Timestamp createdOn = new Timestamp(System.currentTimeMillis());
     private UserRole userRole = UserRole.ANONYMOUS;
 
-    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
-    private List<PrescriptionEntity> prescriptions;
-    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
-    private List<ReminderEntity> reminders;
+//    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+//    private List<ReminderEntity> reminders;
 
     @Override
     public AccountEntity merge(AccountEntity newData) {

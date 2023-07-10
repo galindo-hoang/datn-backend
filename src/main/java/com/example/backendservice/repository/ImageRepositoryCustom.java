@@ -12,12 +12,14 @@ public interface ImageRepositoryCustom {
 
     Boolean download(String fileName);
 
-    String uploadImageBase64Cloudinary(String fileBase64, String type, String fileName) throws IOException;
+    Map uploadImageBase64Cloudinary(String fileBase64, String type, String fileName) throws IOException;
 
     String uploadImageRemoteCloudinary(String url, String type, String fileName) throws IOException;
 
     void deleteImageInCloudinary(String url);
 
     List<ImageEntity> getImages(Map options);
+
+    boolean deleteFolder(String folder);
 
 }

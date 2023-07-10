@@ -5,7 +5,7 @@ import com.example.backendservice.exception.ResourceInvalidException;
 import com.example.backendservice.exception.ResourceNotFoundException;
 import com.example.backendservice.mapper.DrugMapper;
 import com.example.backendservice.model.dto.DrugDto;
-import com.example.backendservice.model.dto.LastModifyDto;
+import com.example.backendservice.model.dto.LastUpload;
 import com.example.backendservice.model.entity.product.CategoryEntity;
 import com.example.backendservice.model.entity.product.DrugEntity;
 import com.example.backendservice.model.entity.product.TopSearchDrugEntity;
@@ -50,6 +50,8 @@ public class DrugServiceImpl implements DrugService {
 
     @PostConstruct
     public void hello() {
+        imageRepositoryCustom.deleteFolder("drug");
+        imageRepositoryCustom.deleteFolder("category");
         try {
             ObjectMapper objectMapper = new ObjectMapper();
             JsonNode jsonNode = objectMapper.readTree(new File(filePath));
@@ -164,8 +166,8 @@ public class DrugServiceImpl implements DrugService {
             List<DrugEntity> drugExist = drugRepository.findAllDrugsByText(request.getDrugName());
             if (drugExist.size() != 0) throw new ResourceInvalidException(Constants.DRUG + Constants.EXIST);
             try {
-                String imagePath = imageRepositoryCustom.uploadImageBase64Cloudinary(request.getImageBase64(), "drug", drug.getDrugName());
-                drug.setImagePath(imagePath);
+                Map image = imageRepositoryCustom.uploadImageBase64Cloudinary(request.getImageBase64(), "drug", drug.getDrugName());
+                drug.setImagePath(String.valueOf(image.get("secure_url")));
             } catch (Throwable e) {
                 e.printStackTrace();
             }
@@ -182,8 +184,8 @@ public class DrugServiceImpl implements DrugService {
         DrugEntity parsedData = old.merge(DrugMapper.requestToEntity(drug));
         if (drug.getImageBase64() != null && !drug.getImageBase64().isBlank()) {
             try {
-                String imagePath = imageRepositoryCustom.uploadImageBase64Cloudinary(drug.getImageBase64(), "drug", parsedData.getDrugName());
-                parsedData.setImagePath(imagePath);
+                Map image = imageRepositoryCustom.uploadImageBase64Cloudinary(drug.getImageBase64(), "drug", parsedData.getDrugName());
+                parsedData.setImagePath(String.valueOf(image.get("secure_url")));
             } catch (Throwable e) {
                 e.printStackTrace();
             }
@@ -205,19 +207,19 @@ public class DrugServiceImpl implements DrugService {
     }
 
     @Override
-    public List<LastModifyDto> ListLastUpdate(Long startYear, Long startMonth, Long endYear, Long endMonth) {
+    public List<LastUpload> ListLastUpdate(Long startYear, Long startMonth, Long endYear, Long endMonth) {
         String startDate = startYear + "-" + startMonth + "-01 00:00:00";
         String endDate = endYear + "-" + endMonth + "-01 00:00:00";
-        List<LastModifyDto> result = new ArrayList<>();
+        List<LastUpload> result = new ArrayList<>();
         drugRepository.findLastUpdate(startDate, endDate).forEach(data -> {
             try {
                 DateFormat formatter = new SimpleDateFormat("yyyy-MM");
                 Date date = formatter.parse(data.get(0,String.class));
-                result.add(new LastModifyDto(date.getTime(), data.get(1, Long.class)));
+                result.add(new LastUpload(date.getTime(), data.get(1, Long.class)));
             } catch (ParseException e) {
                 e.printStackTrace();
             }
         });
-        return result.stream().sorted(Comparator.comparingLong(LastModifyDto::getMonthYear)).toList();
+        return result.stream().sorted(Comparator.comparingLong(LastUpload::getMonthYear)).toList();
     }
 }

@@ -1,6 +1,7 @@
 package com.example.backendservice.repository.impl;
 
 import com.cloudinary.Cloudinary;
+import com.cloudinary.api.ApiResponse;
 import com.cloudinary.utils.ObjectUtils;
 import com.example.backendservice.common.utils.CloudinaryUtils;
 import com.example.backendservice.common.utils.Constants;
@@ -52,12 +53,12 @@ public class ImageRepositoryCustomImpl implements ImageRepositoryCustom {
     }
 
     @Override
-    public String uploadImageBase64Cloudinary(String fileBase64, String type, String fileName) throws IOException {
+    public Map uploadImageBase64Cloudinary(String fileBase64, String type, String fileName) throws IOException {
         if (fileBase64 == null || fileBase64.isBlank()) throw new ResourceInvalidException("");
         Map uploadImage = CloudinaryUtils.getInstance().uploader().upload(fileBase64, ObjectUtils.asMap(
                 "public_id", type + "_" + fileName,
                 "folder", type));
-        return String.valueOf(uploadImage.get("secure_url"));
+        return uploadImage;
 
     }
 
@@ -80,12 +81,32 @@ public class ImageRepositoryCustomImpl implements ImageRepositoryCustom {
         Cloudinary instance = CloudinaryUtils.getInstance();
         Gson gson = new Gson();
         try {
+            ApiResponse response = instance.api().resources(options);
+            response.entrySet().stream().forEach(data -> {
+                System.out.println(data.toString());
+            });
+            List<Map<String, Object>> resources = (List<Map<String, Object>>) response.get("resources");
+
+            System.out.println(resources.size());
             ArrayList<Map<String, Object>> images = (ArrayList<Map<String, Object>>) instance.api().resources(options).values().stream().toList().get(0);
             return images.stream().map(image -> gson.fromJson(gson.toJson(image), ImageEntity.class)).toList();
         } catch (Exception e) {
             e.printStackTrace();
         }
         return null;
+    }
+
+    @Override
+    public boolean deleteFolder(String folder) {
+        Cloudinary cloudinary = CloudinaryUtils.getInstance();
+        try {
+            ApiResponse apiResponse = cloudinary.api().deleteFolder("/" + folder,ObjectUtils.emptyMap());
+            // Check the response for success or failure
+            return apiResponse.get("deleted") != null;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
     }
 
     private String uploadFile(File file, String fileName, String extension) {
