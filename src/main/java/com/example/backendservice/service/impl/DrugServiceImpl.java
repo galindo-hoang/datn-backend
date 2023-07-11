@@ -5,7 +5,6 @@ import com.example.backendservice.exception.ResourceInvalidException;
 import com.example.backendservice.exception.ResourceNotFoundException;
 import com.example.backendservice.mapper.DrugMapper;
 import com.example.backendservice.model.dto.DrugDto;
-import com.example.backendservice.model.dto.LastUpload;
 import com.example.backendservice.model.entity.product.CategoryEntity;
 import com.example.backendservice.model.entity.product.DrugEntity;
 import com.example.backendservice.model.entity.product.TopSearchDrugEntity;
@@ -27,9 +26,6 @@ import org.springframework.transaction.annotation.Transactional;
 import java.io.File;
 import java.io.IOException;
 import java.sql.Timestamp;
-import java.text.DateFormat;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.*;
 
 import static com.example.backendservice.common.utils.CodeGeneratorUtils.randomTimeStamp;
@@ -42,7 +38,7 @@ public class DrugServiceImpl implements DrugService {
     private final CategoryRepository categoryRepository;
     private final TopSearchRepository topSearchRepository;
     private final ImageRepositoryCustom imageRepositoryCustom;
-
+    private final String folder = "drug";
     @Value("${json.file.rawData}")
     private String filePath;
     @Value("${image.drug.default}")
@@ -166,7 +162,7 @@ public class DrugServiceImpl implements DrugService {
             List<DrugEntity> drugExist = drugRepository.findAllDrugsByText(request.getDrugName());
             if (drugExist.size() != 0) throw new ResourceInvalidException(Constants.DRUG + Constants.EXIST);
             try {
-                Map image = imageRepositoryCustom.uploadImageBase64Cloudinary(request.getImageBase64(), "drug", drug.getDrugName());
+                Map image = imageRepositoryCustom.uploadImageBase64Cloudinary(request.getImageBase64(), folder, drug.getDrugName());
                 drug.setImagePath(String.valueOf(image.get("secure_url")));
             } catch (Throwable e) {
                 e.printStackTrace();
@@ -184,7 +180,7 @@ public class DrugServiceImpl implements DrugService {
         DrugEntity parsedData = old.merge(DrugMapper.requestToEntity(drug));
         if (drug.getImageBase64() != null && !drug.getImageBase64().isBlank()) {
             try {
-                Map image = imageRepositoryCustom.uploadImageBase64Cloudinary(drug.getImageBase64(), "drug", parsedData.getDrugName());
+                Map image = imageRepositoryCustom.uploadImageBase64Cloudinary(drug.getImageBase64(), folder, parsedData.getDrugName());
                 parsedData.setImagePath(String.valueOf(image.get("secure_url")));
             } catch (Throwable e) {
                 e.printStackTrace();
@@ -197,6 +193,7 @@ public class DrugServiceImpl implements DrugService {
     public void removeDrug(Long drugId) {
         DrugEntity drug = drugRepository.findDrugEntityById(drugId).orElseThrow(() -> new ResourceNotFoundException(Constants.DRUG + Constants.NOT_FOUND));
         drug.removeSelf();
+        imageRepositoryCustom.deleteImage(folder, folder + "_" + drug.getDrugName());
         drugRepository.deleteById(drugId);
     }
 
@@ -204,22 +201,5 @@ public class DrugServiceImpl implements DrugService {
     @Override
     public Long getSize(String text) {
         return (long) drugRepository.findAllDrugsByText(text).size();
-    }
-
-    @Override
-    public List<LastUpload> ListLastUpdate(Long startYear, Long startMonth, Long endYear, Long endMonth) {
-        String startDate = startYear + "-" + startMonth + "-01 00:00:00";
-        String endDate = endYear + "-" + endMonth + "-01 00:00:00";
-        List<LastUpload> result = new ArrayList<>();
-        drugRepository.findLastUpdate(startDate, endDate).forEach(data -> {
-            try {
-                DateFormat formatter = new SimpleDateFormat("yyyy-MM");
-                Date date = formatter.parse(data.get(0,String.class));
-                result.add(new LastUpload(date.getTime(), data.get(1, Long.class)));
-            } catch (ParseException e) {
-                e.printStackTrace();
-            }
-        });
-        return result.stream().sorted(Comparator.comparingLong(LastUpload::getMonthYear)).toList();
     }
 }

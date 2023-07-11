@@ -16,10 +16,8 @@ public interface ImageRepositoryCustom {
 
     String uploadImageRemoteCloudinary(String url, String type, String fileName) throws IOException;
 
-    void deleteImageInCloudinary(String url);
-
-    List<ImageEntity> getImages(Map options);
-
     boolean deleteFolder(String folder);
+
+    boolean deleteImage(String folder, String fileName);
 
 }

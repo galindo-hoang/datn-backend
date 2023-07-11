@@ -7,13 +7,11 @@ import com.example.backendservice.common.utils.CloudinaryUtils;
 import com.example.backendservice.common.utils.Constants;
 import com.example.backendservice.common.utils.FileUtils;
 import com.example.backendservice.exception.ResourceInvalidException;
-import com.example.backendservice.model.entity.product.ImageEntity;
 import com.example.backendservice.model.request.ImageRequest;
 import com.example.backendservice.repository.ImageRepositoryCustom;
 import com.google.auth.Credentials;
 import com.google.auth.oauth2.GoogleCredentials;
 import com.google.cloud.storage.*;
-import com.google.gson.Gson;
 import org.springframework.stereotype.Repository;
 
 import java.io.File;
@@ -21,10 +19,7 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.UUID;
+import java.util.*;
 
 @Repository
 public class ImageRepositoryCustomImpl implements ImageRepositoryCustom {
@@ -72,36 +67,24 @@ public class ImageRepositoryCustomImpl implements ImageRepositoryCustom {
     }
 
     @Override
-    public void deleteImageInCloudinary(String url) {
-
-    }
-
-    @Override
-    public List<ImageEntity> getImages(Map options) {
-        Cloudinary instance = CloudinaryUtils.getInstance();
-        Gson gson = new Gson();
-        try {
-            ApiResponse response = instance.api().resources(options);
-            response.entrySet().stream().forEach(data -> {
-                System.out.println(data.toString());
-            });
-            List<Map<String, Object>> resources = (List<Map<String, Object>>) response.get("resources");
-
-            System.out.println(resources.size());
-            ArrayList<Map<String, Object>> images = (ArrayList<Map<String, Object>>) instance.api().resources(options).values().stream().toList().get(0);
-            return images.stream().map(image -> gson.fromJson(gson.toJson(image), ImageEntity.class)).toList();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return null;
-    }
-
-    @Override
     public boolean deleteFolder(String folder) {
         Cloudinary cloudinary = CloudinaryUtils.getInstance();
         try {
-            ApiResponse apiResponse = cloudinary.api().deleteFolder("/" + folder,ObjectUtils.emptyMap());
+            ApiResponse apiResponse = cloudinary.api().deleteFolder("/" + folder, ObjectUtils.emptyMap());
             // Check the response for success or failure
+            return apiResponse.get("deleted") != null;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+
+    @Override
+    public boolean deleteImage(String folder, String fileName) {
+        Cloudinary cloudinary = CloudinaryUtils.getInstance();
+        try {
+            ApiResponse apiResponse = cloudinary.api().deleteResources(List.of(folder + "/" + fileName),
+                    ObjectUtils.asMap("type", "upload", "resource_type", "image"));            // Check the response for success or failure
             return apiResponse.get("deleted") != null;
         } catch (Exception e) {
             e.printStackTrace();

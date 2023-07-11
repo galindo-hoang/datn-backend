@@ -26,6 +26,7 @@ import java.util.Objects;
 public class CategoryServiceImpl implements CategoryService {
     private final CategoryRepository categoryRepository;
     private final ImageRepositoryCustom imageRepositoryCustom;
+    private final String folder = "category";
 
     @Override
     public CategoryDto addCategory(CategoryRequest categoryRequest) {
@@ -35,7 +36,7 @@ public class CategoryServiceImpl implements CategoryService {
             if (categoryRepository.findCategoryEntityByName(categoryRequest.getName()).isEmpty()) {
                 CategoryEntity category = CategoryMapper.requestToEntity(categoryRequest);
                 try {
-                    Map image = imageRepositoryCustom.uploadImageBase64Cloudinary(categoryRequest.getImageBase64(), "category", categoryRequest.getName());
+                    Map image = imageRepositoryCustom.uploadImageBase64Cloudinary(categoryRequest.getImageBase64(), folder, categoryRequest.getName());
                     category.setImage(String.valueOf(image.get("secure_url")));
                 } catch (Throwable e) {
                     e.printStackTrace();
@@ -49,6 +50,8 @@ public class CategoryServiceImpl implements CategoryService {
 
     @Override
     public void removeCategory(CategoryRequest categoryRequest) {
+        CategoryEntity category = categoryRepository.findById(categoryRequest.getId()).orElseThrow(() -> new ResourceNotFoundException(Constants.CATEGORY + Constants.NOT_FOUND));
+        imageRepositoryCustom.deleteImage(folder, folder + "_" + category.getName());
         categoryRepository.deleteById(categoryRequest.getId());
     }
 
@@ -58,9 +61,7 @@ public class CategoryServiceImpl implements CategoryService {
     }
 
     public CategoryDto findCategoryById(Long id) {
-        CategoryEntity category = categoryRepository.findById(id).orElseThrow(() -> {
-            throw new ResourceNotFoundException(Constants.CATEGORY + Constants.NOT_FOUND);
-        });
+        CategoryEntity category = categoryRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException(Constants.CATEGORY + Constants.NOT_FOUND));
         return CategoryMapper.entityToDto(category);
     }
 
@@ -83,7 +84,7 @@ public class CategoryServiceImpl implements CategoryService {
             CategoryEntity oldCategory = categoryRepository.findById(categoryRequest.getId()).orElseThrow(() -> new ResourceNotFoundException(Constants.CATEGORY + Constants.NOT_FOUND));
             CategoryEntity parsedCategory = oldCategory.merge(CategoryMapper.requestToEntity(categoryRequest));
             try {
-                Map image = imageRepositoryCustom.uploadImageBase64Cloudinary(categoryRequest.getImageBase64(), "category", parsedCategory.getName());
+                Map image = imageRepositoryCustom.uploadImageBase64Cloudinary(categoryRequest.getImageBase64(), folder, parsedCategory.getName());
                 parsedCategory.setImage(String.valueOf(image.get("secure_url")));
             } catch (IOException e) {
                 e.printStackTrace();

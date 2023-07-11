@@ -25,13 +25,15 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
+import static com.example.backendservice.common.utils.CodeGeneratorUtils.randomTimeStamp;
+
 @Service
 @RequiredArgsConstructor
 @Transactional
 public class PrescriptionServiceImpl implements PrescriptionService {
     private final ImageRepositoryCustom imageRepositoryCustom;
     private final PrescriptionRepository prescriptionRepository;
-
+    private final String folder = "prescription";
     @Value("${json.file.prescription}")
     private String filePath;
 
@@ -40,15 +42,13 @@ public class PrescriptionServiceImpl implements PrescriptionService {
         imageRepositoryCustom.deleteFolder("prescription");
         File directoryPath = new File(filePath);
         List<String> files = List.of(Objects.requireNonNull(directoryPath.list()));
-        List<Integer> sortedList = new ArrayList<>(files.stream().map(data -> Integer.valueOf(data.split(".jpg")[0].split("_")[1])).toList());
-
-        for (Integer fileName : sortedList) {
-            PrescriptionEntity prescription = prescriptionRepository.save(new PrescriptionEntity());
+        for (String fileName : files) {
+            PrescriptionEntity prescription = prescriptionRepository.save(PrescriptionEntity.builder().createdOn(randomTimeStamp()).build());
             try {
-                File image = new File(filePath + "/" + "don_" + fileName + ".jpg");
+                File image = new File(filePath + "/" + fileName);
                 byte[] fileContent = FileUtils.readFileToByteArray(image);
-                String encodeBase64 = "data:image/png;base64," + Base64.getEncoder().encodeToString(fileContent);
-                Map imageInfo = imageRepositoryCustom.uploadImageBase64Cloudinary(encodeBase64, "prescription", String.valueOf(prescription.getId()));
+                String encodeBase64 = "data:image/jpg;base64," + Base64.getEncoder().encodeToString(fileContent);
+                Map imageInfo = imageRepositoryCustom.uploadImageBase64Cloudinary(encodeBase64, folder, String.valueOf(prescription.getId()));
                 prescriptionRepository.save(addProperty(prescription, imageInfo));
             } catch (Throwable e) {
                 prescriptionRepository.delete(prescription);
@@ -69,6 +69,7 @@ public class PrescriptionServiceImpl implements PrescriptionService {
 
     @Override
     public void deletePrescription(Long id) {
+        imageRepositoryCustom.deleteImage(folder, folder + "_" + id.toString());
         prescriptionRepository.deleteById(id);
     }
 
@@ -78,6 +79,7 @@ public class PrescriptionServiceImpl implements PrescriptionService {
         String endDate = endYear + "-" + endMonth + "-01 00:00:00";
         List<LastUpload> result = new ArrayList<>();
         prescriptionRepository.analyzePrescription(startDate, endDate).forEach(data -> {
+            System.out.println("huy.hoang1 data:" + data.toString());
             try {
                 DateFormat formatter = new SimpleDateFormat("yyyy-MM");
                 Date date = formatter.parse(data.get(0, String.class));
@@ -94,7 +96,7 @@ public class PrescriptionServiceImpl implements PrescriptionService {
         if (request.getImageBase64() != null && !request.getImageBase64().isBlank()) {
             PrescriptionEntity prescription = prescriptionRepository.save(new PrescriptionEntity());
             try {
-                Map imageInfo = imageRepositoryCustom.uploadImageBase64Cloudinary(request.getImageBase64(), "prescription", String.valueOf(prescription.getId()));
+                Map imageInfo = imageRepositoryCustom.uploadImageBase64Cloudinary(request.getImageBase64(), folder, String.valueOf(prescription.getId()));
                 return PrescriptionMapper.entityToDto(prescriptionRepository.save(addProperty(prescription, imageInfo)));
             } catch (Throwable e) {
                 e.printStackTrace();

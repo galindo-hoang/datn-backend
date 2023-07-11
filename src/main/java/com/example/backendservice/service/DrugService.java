@@ -23,6 +23,4 @@ public interface DrugService {
     void removeDrug(Long drugId);
 
     Long getSize(String name);
-
-    List<LastUpload> ListLastUpdate(Long startYear, Long startMonth, Long endYear, Long endMonth);
 }

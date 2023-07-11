@@ -49,17 +49,6 @@ public class DrugController extends BaseController {
         return ResponseEntity.status(HttpStatus.NO_CONTENT).body(null);
     }
 
-    // remove
-    @GetMapping(path = "lastUpdate")
-    ResponseEntity<List<LastUpload>> findLastUpdate(
-            @RequestParam Long startYear,
-            @RequestParam Long startMonth,
-            @RequestParam Long endYear,
-            @RequestParam Long endMonth
-    ) {
-        return ResponseEntity.status(HttpStatus.OK).body(drugService.ListLastUpdate(startYear,startMonth,endYear, endMonth));
-    }
-
     @GetMapping(path = "multiple")
     ResponseEntity<List<DrugDto>> getListDrugsByName(
             @RequestParam(required = false, defaultValue = "") String name,
