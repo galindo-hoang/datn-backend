@@ -19,7 +19,9 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
-import java.util.*;
+import java.util.List;
+import java.util.Map;
+import java.util.UUID;
 
 @Repository
 public class ImageRepositoryCustomImpl implements ImageRepositoryCustom {
@@ -70,8 +72,7 @@ public class ImageRepositoryCustomImpl implements ImageRepositoryCustom {
     public boolean deleteFolder(String folder) {
         Cloudinary cloudinary = CloudinaryUtils.getInstance();
         try {
-            ApiResponse apiResponse = cloudinary.api().deleteFolder("/" + folder, ObjectUtils.emptyMap());
-            // Check the response for success or failure
+            ApiResponse apiResponse = cloudinary.api().deleteResourcesByPrefix(folder + "/", ObjectUtils.emptyMap());
             return apiResponse.get("deleted") != null;
         } catch (Exception e) {
             e.printStackTrace();

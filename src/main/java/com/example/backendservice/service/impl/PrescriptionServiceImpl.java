@@ -42,7 +42,8 @@ public class PrescriptionServiceImpl implements PrescriptionService {
         imageRepositoryCustom.deleteFolder("prescription");
         File directoryPath = new File(filePath);
         List<String> files = List.of(Objects.requireNonNull(directoryPath.list()));
-        for (String fileName : files) {
+        for (int i = 0; i < files.size()/3; ++i) {
+            String fileName = files.get(i);
             PrescriptionEntity prescription = prescriptionRepository.save(PrescriptionEntity.builder().createdOn(randomTimeStamp()).build());
             try {
                 File image = new File(filePath + "/" + fileName);
