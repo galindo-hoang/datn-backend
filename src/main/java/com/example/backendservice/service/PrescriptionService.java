@@ -10,7 +10,7 @@ import java.util.List;
 public interface PrescriptionService {
     List<PrescriptionDto> getListImage(FilterRequest filter);
 
-    void deletePrescription(Long id);
+    void deletePrescription(PrescriptionRequest request);
 
     List<LastUpload> listLastUpload(Long startYear, Long startMonth, Long endYear, Long endMonth);
 

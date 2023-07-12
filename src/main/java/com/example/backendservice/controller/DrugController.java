@@ -44,8 +44,8 @@ public class DrugController extends BaseController {
     }
 
     @RequestMapping(path = "delete", method = DELETE)
-    ResponseEntity<Object> deleteDrug(@RequestParam Long id) {
-        drugService.removeDrug(id);
+    ResponseEntity<Object> deleteDrug(@RequestBody DrugRequest request) {
+        drugService.removeDrug(request);
         return ResponseEntity.status(HttpStatus.NO_CONTENT).body(null);
     }
 

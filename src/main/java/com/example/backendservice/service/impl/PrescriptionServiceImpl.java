@@ -69,9 +69,9 @@ public class PrescriptionServiceImpl implements PrescriptionService {
     }
 
     @Override
-    public void deletePrescription(Long id) {
-        imageRepositoryCustom.deleteImage(folder, folder + "_" + id.toString());
-        prescriptionRepository.deleteById(id);
+    public void deletePrescription(PrescriptionRequest request) {
+        imageRepositoryCustom.deleteImage(folder, folder + "_" + request.getId().toString());
+        prescriptionRepository.deleteById(request.getId());
     }
 
     @Override

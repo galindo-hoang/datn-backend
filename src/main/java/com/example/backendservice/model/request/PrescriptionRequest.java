@@ -9,4 +9,5 @@ import lombok.*;
 @Builder
 public class PrescriptionRequest {
     private String imageBase64;
+    private Long id;
 }

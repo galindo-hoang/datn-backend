@@ -20,7 +20,7 @@ public interface DrugService {
 
     DrugDto updateDrug(DrugRequest drug);
 
-    void removeDrug(Long drugId);
+    void removeDrug(DrugRequest request);
 
     Long getSize(String name);
 }

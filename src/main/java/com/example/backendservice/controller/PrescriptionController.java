@@ -1,7 +1,6 @@
 package com.example.backendservice.controller;
 
 import com.example.backendservice.common.controller.BaseController;
-import com.example.backendservice.model.dto.ImageDto;
 import com.example.backendservice.model.dto.LastUpload;
 import com.example.backendservice.model.dto.PrescriptionDto;
 import com.example.backendservice.model.request.FilterRequest;
@@ -12,6 +11,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
@@ -40,18 +40,16 @@ public class PrescriptionController extends BaseController {
     ) {
         return ResponseEntity.status(HttpStatus.OK).body(prescriptionService.getListImage(
                 FilterRequest.builder()
-                .offset(offset)
-                .limit(size)
-                .sort(sort)
-                .build()
+                        .offset(offset)
+                        .limit(size)
+                        .sort(sort)
+                        .build()
         ));
     }
 
     @RequestMapping(value = "delete", method = DELETE)
-    public ResponseEntity<Objects> deletePrescription(
-            @RequestParam Long id
-    ) {
-        prescriptionService.deletePrescription(id);
+    public ResponseEntity<Objects> deletePrescription(@RequestBody PrescriptionRequest request) {
+        prescriptionService.deletePrescription(request);
         return ResponseEntity.status(HttpStatus.NO_CONTENT).body(null);
     }
 

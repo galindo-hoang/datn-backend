@@ -190,11 +190,11 @@ public class DrugServiceImpl implements DrugService {
     }
 
     @Override
-    public void removeDrug(Long drugId) {
-        DrugEntity drug = drugRepository.findDrugEntityById(drugId).orElseThrow(() -> new ResourceNotFoundException(Constants.DRUG + Constants.NOT_FOUND));
+    public void removeDrug(DrugRequest request) {
+        DrugEntity drug = drugRepository.findDrugEntityById(request.getId()).orElseThrow(() -> new ResourceNotFoundException(Constants.DRUG + Constants.NOT_FOUND));
         drug.removeSelf();
         imageRepositoryCustom.deleteImage(folder, folder + "_" + drug.getDrugName());
-        drugRepository.deleteById(drugId);
+        drugRepository.deleteById(request.getId());
     }
 
 
