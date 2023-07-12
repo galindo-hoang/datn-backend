@@ -15,4 +15,6 @@ public interface PrescriptionService {
     List<LastUpload> listLastUpload(Long startYear, Long startMonth, Long endYear, Long endMonth);
 
     PrescriptionDto addPrescription(PrescriptionRequest request);
+
+    Long getSize();
 }

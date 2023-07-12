@@ -28,7 +28,7 @@ public class PrescriptionController extends BaseController {
     private final PrescriptionService prescriptionService;
 
     @RequestMapping(value = "add", method = POST)
-    public ResponseEntity<PrescriptionDto> addPrescription(PrescriptionRequest request) {
+    public ResponseEntity<PrescriptionDto> addPrescription(@RequestBody PrescriptionRequest request) {
         return ResponseEntity.status(HttpStatus.ACCEPTED).body(prescriptionService.addPrescription(request));
     }
 
@@ -61,6 +61,11 @@ public class PrescriptionController extends BaseController {
             @RequestParam Long endMonth
     ) {
         return ResponseEntity.status(HttpStatus.OK).body(prescriptionService.listLastUpload(startYear, startMonth, endYear, endMonth));
+    }
+
+    @GetMapping("size")
+    ResponseEntity<Long> getSize() {
+        return ResponseEntity.status(HttpStatus.OK).body(prescriptionService.getSize());
     }
 
 }

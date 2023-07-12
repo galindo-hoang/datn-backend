@@ -107,6 +107,11 @@ public class PrescriptionServiceImpl implements PrescriptionService {
         } else throw new ResourceInvalidException("image is invalid");
     }
 
+    @Override
+    public Long getSize() {
+        return (long) prescriptionRepository.findAll().size();
+    }
+
     private PrescriptionEntity addProperty(PrescriptionEntity prescription, Map imageInfo) {
         prescription.setImagePath(String.valueOf(imageInfo.get("secure_url")));
         prescription.setBytes(Long.valueOf(String.valueOf(imageInfo.get("bytes"))));
