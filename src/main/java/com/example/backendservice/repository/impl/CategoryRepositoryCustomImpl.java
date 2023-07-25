@@ -15,11 +15,12 @@ import static com.example.backendservice.model.entity.product.QCategoryEntity.ca
 public class CategoryRepositoryCustomImpl implements CategoryRepositoryCustom {
     @PersistenceContext
     private EntityManager entityManager;
+
     @Override
     public List<CategoryEntity> findCategoriesByText(String name, Long offset, Long size) {
         return new JPAQueryFactory(entityManager)
                 .from(categoryEntity)
-                .where(categoryEntity.name.toLowerCase().contains((name.isBlank() ? name : "").toLowerCase()))
+                .where(categoryEntity.name.toLowerCase().contains((name.isBlank() ? "" : name).toLowerCase()))
                 .offset(offset).limit(size).orderBy(categoryEntity.name.asc())
                 .select(categoryEntity)
                 .fetch();
