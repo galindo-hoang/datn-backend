@@ -16,6 +16,7 @@ public class CategoryMapper {
                 .id(category.getId())
                 .name(category.getName())
                 .imagePath(category.getImage())
+                .lastModify(category.getLastModify().getTime())
                 .build();
     }
 }

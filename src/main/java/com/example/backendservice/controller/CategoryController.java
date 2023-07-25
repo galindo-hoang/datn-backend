@@ -1,8 +1,10 @@
 package com.example.backendservice.controller;
 
 import com.example.backendservice.common.controller.BaseController;
+import com.example.backendservice.common.model.SortType;
 import com.example.backendservice.model.dto.CategoryDto;
 import com.example.backendservice.model.request.CategoryRequest;
+import com.example.backendservice.model.request.FilterRequest;
 import com.example.backendservice.service.CategoryService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -46,9 +48,20 @@ public class CategoryController extends BaseController {
     @GetMapping(path = "multiple")
     ResponseEntity<List<CategoryDto>> getList(
             @RequestParam(required = false, defaultValue = "") String name,
-            @RequestParam(required = false, defaultValue = "0") Long offSet,
-            @RequestParam(required = false, defaultValue = "20") Long size) {
-        return ResponseEntity.status(HttpStatus.OK).body(categoryService.findCategoriesByName(name, offSet, size));
+            @RequestParam(required = false, defaultValue = "0") Long offset,
+            @RequestParam(required = false, defaultValue = "alphabet") String sortType,
+            @RequestParam(required = false, defaultValue = "20") Long size,
+            @RequestParam(required = false, defaultValue = "asc") String sort
+    ) {
+        return ResponseEntity.status(HttpStatus.OK).body(categoryService.findCategoriesByText(
+                FilterRequest.builder()
+                        .keyRequestText(name)
+                        .typeSort(SortType.ALPHABET.name().equalsIgnoreCase(sortType) ? SortType.ALPHABET : SortType.DATE)
+                        .offset(offset)
+                        .limit(size)
+                        .sort(sort)
+                        .build()
+        ));
     }
 
     @GetMapping(path = "size")

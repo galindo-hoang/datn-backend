@@ -55,6 +55,7 @@ public class DrugServiceImpl implements DrugService {
                 CategoryEntity category = CategoryEntity.builder()
                         .name(categoryNode.has("name") ? categoryNode.get("name").asText() : "")
                         .image(categoryNode.has("icon") ? categoryNode.get("icon").asText() : "")
+                        .lastModify(randomTimeStamp())
                         .build();
                 category.setDrugs(new ArrayList<>());
                 CategoryEntity categoryEntity = categoryRepository.save(category);

@@ -1,7 +1,9 @@
 package com.example.backendservice.repository.impl;
 
+import com.example.backendservice.common.model.SortType;
 import com.example.backendservice.model.entity.product.CategoryEntity;
 import com.example.backendservice.repository.CategoryRepositoryCustom;
+import com.querydsl.core.types.OrderSpecifier;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
@@ -17,11 +19,12 @@ public class CategoryRepositoryCustomImpl implements CategoryRepositoryCustom {
     private EntityManager entityManager;
 
     @Override
-    public List<CategoryEntity> findCategoriesByText(String name, Long offset, Long size) {
+    public List<CategoryEntity> findCategoriesByText(String name, Long offset, Long size, SortType sortType, Boolean asc) {
         return new JPAQueryFactory(entityManager)
                 .from(categoryEntity)
                 .where(categoryEntity.name.toLowerCase().contains((name.isBlank() ? "" : name).toLowerCase()))
-                .offset(offset).limit(size).orderBy(categoryEntity.name.asc())
+                .offset(offset).limit(size)
+                .orderBy(getTypeSort(sortType, asc))
                 .select(categoryEntity)
                 .fetch();
     }
@@ -34,5 +37,13 @@ public class CategoryRepositoryCustomImpl implements CategoryRepositoryCustom {
                 .orderBy(categoryEntity.name.asc())
                 .select(categoryEntity)
                 .fetch();
+    }
+
+    private OrderSpecifier getTypeSort(SortType typeSort, Boolean asc) {
+        if (typeSort.equals(SortType.ALPHABET)) {
+            return asc ? categoryEntity.name.asc() : categoryEntity.name.desc();
+        } else {
+            return asc ? categoryEntity.lastModify.asc() : categoryEntity.lastModify.desc();
+        }
     }
 }

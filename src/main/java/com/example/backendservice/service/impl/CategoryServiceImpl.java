@@ -7,6 +7,7 @@ import com.example.backendservice.mapper.CategoryMapper;
 import com.example.backendservice.model.dto.CategoryDto;
 import com.example.backendservice.model.entity.product.CategoryEntity;
 import com.example.backendservice.model.request.CategoryRequest;
+import com.example.backendservice.model.request.FilterRequest;
 import com.example.backendservice.repository.CategoryRepository;
 import com.example.backendservice.repository.ImageRepositoryCustom;
 import com.example.backendservice.service.CategoryService;
@@ -15,7 +16,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.io.IOException;
-import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -66,9 +66,16 @@ public class CategoryServiceImpl implements CategoryService {
     }
 
     @Override
-    public List<CategoryDto> findCategoriesByName(String name, Long offset, Long size) {
-        return categoryRepository.findCategoriesByText(name, offset, size)
-                .stream().map(CategoryMapper::entityToDto).sorted(Comparator.comparing(CategoryDto::getName)).toList();
+    public List<CategoryDto> findCategoriesByText(FilterRequest filter) {
+        return categoryRepository.findCategoriesByText(
+                        filter.getKeyRequestText(),
+                        filter.getOffset(),
+                        filter.getLimit(),
+                        filter.getTypeSort(),
+                        filter.getSort().equalsIgnoreCase("asc")
+                )
+                .stream()
+                .map(CategoryMapper::entityToDto).toList();
     }
 
     @Override

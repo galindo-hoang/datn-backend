@@ -5,6 +5,7 @@ import com.example.backendservice.common.utils.DataAdapter;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.sql.Timestamp;
 import java.util.List;
 
 @Getter
@@ -26,6 +27,9 @@ public class CategoryEntity extends BaseEntity implements DataAdapter<CategoryEn
 
     @OneToMany(mappedBy = "category", cascade = CascadeType.REMOVE)
     private List<DrugEntity> drugs;
+
+    private Timestamp lastModify = new Timestamp(System.currentTimeMillis());
+
 
     @Override
     public CategoryEntity merge(CategoryEntity newData) {
