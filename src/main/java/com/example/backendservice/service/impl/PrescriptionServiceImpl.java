@@ -42,7 +42,7 @@ public class PrescriptionServiceImpl implements PrescriptionService {
         imageRepositoryCustom.deleteFolder("prescription");
         File directoryPath = new File(filePath);
         List<String> files = List.of(Objects.requireNonNull(directoryPath.list()));
-        for (int i = 0; i < files.size()/3; ++i) {
+        for (int i = 0; i < files.size() / 3; ++i) {
             String fileName = files.get(i);
             PrescriptionEntity prescription = prescriptionRepository.save(PrescriptionEntity.builder().createdOn(randomTimeStamp()).build());
             try {
@@ -95,7 +95,12 @@ public class PrescriptionServiceImpl implements PrescriptionService {
     @Override
     public PrescriptionDto addPrescription(PrescriptionRequest request) {
         if (request.getImageBase64() != null && !request.getImageBase64().isBlank()) {
-            PrescriptionEntity prescription = prescriptionRepository.save(new PrescriptionEntity());
+            PrescriptionEntity entity = PrescriptionEntity
+                    .builder()
+                    .rate(request.getRate())
+                    .review(request.getReview())
+                    .build();
+            PrescriptionEntity prescription = prescriptionRepository.save(entity);
             try {
                 Map imageInfo = imageRepositoryCustom.uploadImageBase64Cloudinary(request.getImageBase64(), folder, String.valueOf(prescription.getId()));
                 return PrescriptionMapper.entityToDto(prescriptionRepository.save(addProperty(prescription, imageInfo)));

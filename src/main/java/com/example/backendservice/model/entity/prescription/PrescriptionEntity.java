@@ -23,5 +23,7 @@ public class PrescriptionEntity extends BaseEntity {
     private Long width;
     private Long height;
 
+    private Long rate;
+    private String review;
 
 }

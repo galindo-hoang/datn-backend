@@ -15,6 +15,7 @@
     <description>BackendService</description>
     <properties>
         <java.version>18</java.version>
+        <querydsl.version>5.0.0</querydsl.version>
     </properties>
 
     <dependencies>
@@ -73,19 +74,35 @@
             <artifactId>spring-webflux</artifactId>
             <scope>test</scope>
         </dependency>
+<!--//////-->
+        <dependency>
+            <groupId>com.querydsl</groupId>
+            <artifactId>querydsl-core</artifactId>
+            <version>${querydsl.version}</version>
+        </dependency>
         <dependency>
             <groupId>com.querydsl</groupId>
             <artifactId>querydsl-jpa</artifactId>
-            <version>5.0.0</version>
+            <version>${querydsl.version}</version>
             <classifier>jakarta</classifier>
+        </dependency>
+        <dependency>
+            <groupId>com.querydsl</groupId>
+            <artifactId>querydsl-sql</artifactId>
+            <version>${querydsl.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.querydsl</groupId>
+            <artifactId>querydsl-sql-spring</artifactId>
+            <version>${querydsl.version}</version>
         </dependency>
         <dependency>
             <groupId>com.querydsl</groupId>
             <artifactId>querydsl-apt</artifactId>
-            <version>5.0.0</version>
+            <version>${querydsl.version}</version>
             <classifier>jakarta</classifier>
         </dependency>
-
+<!--////////-->
         <!-- https://mvnrepository.com/artifact/com.google.code.gson/gson -->
         <dependency>
             <groupId>com.google.code.gson</groupId>
@@ -127,6 +144,18 @@
             <artifactId>commons-io</artifactId>
             <version>2.11.0</version>
         </dependency>
+<!--        &lt;!&ndash; https://mvnrepository.com/artifact/org.hibernate/hibernate-search-orm &ndash;&gt;-->
+<!--        <dependency>-->
+<!--            <groupId>org.hibernate</groupId>-->
+<!--            <artifactId>hibernate-search-orm</artifactId>-->
+<!--            <version>5.11.5.Final</version>-->
+<!--        </dependency>-->
+
+        <!-- Spring Data Elasticsearch -->
+<!--        <dependency>-->
+<!--            <groupId>org.springframework.boot</groupId>-->
+<!--            <artifactId>spring-boot-starter-data-elasticsearch</artifactId>-->
+<!--        </dependency>-->
 
 
         <dependency>

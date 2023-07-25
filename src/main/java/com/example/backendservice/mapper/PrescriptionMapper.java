@@ -12,6 +12,8 @@ public class PrescriptionMapper {
                 .bytes(prescription.getBytes())
                 .width(prescription.getWidth())
                 .height(prescription.getHeight())
+                .rate(prescription.getRate())
+                .review(prescription.getReview())
                 .build();
 
     }

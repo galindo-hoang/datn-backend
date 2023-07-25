@@ -21,4 +21,7 @@ public class PrescriptionDto {
     private Long bytes;
     private Long width;
     private Long height;
+
+    private Long rate;
+    private String review;
 }

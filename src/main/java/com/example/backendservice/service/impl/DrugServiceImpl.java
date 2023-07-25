@@ -88,17 +88,35 @@ public class DrugServiceImpl implements DrugService {
 
     @Override
     public List<DrugDto> findDrugsByText(FilterRequest filter) {
-        return drugRepository
-                .findDrugsByText(
-                        filter.getKeyRequestText(),
-                        filter.getOffset(),
-                        filter.getLimit(),
-                        filter.getTypeSort(),
-                        filter.getSort().equalsIgnoreCase("asc")
-                )
-                .stream()
-                .map(DrugMapper::entityToDto)
-                .toList();
+        List<String> decoratedText = List.of(filter.getKeyRequestText().toLowerCase().split("\\(")[0].split(" "));
+        List<DrugEntity> result = new ArrayList<>();
+        StringBuilder merSub = new StringBuilder();
+        for (String sub : decoratedText) {
+            merSub.append(" ").append(sub);
+            List<DrugEntity> temp = drugRepository.findDrugsByText(
+                    merSub.toString().trim(),
+                    filter.getOffset(),
+                    filter.getLimit(),
+                    filter.getTypeSort(),
+                    filter.getSort().equalsIgnoreCase("asc"));
+            if (temp.size() == 0) break;
+            else {
+                result.clear();
+                result.addAll(temp);
+            }
+        }
+        return result.stream().map(DrugMapper::entityToDto).toList();
+//        return drugRepository
+//                .findDrugsByText(
+//                        filter.getKeyRequestText(),
+//                        filter.getOffset(),
+//                        filter.getLimit(),
+//                        filter.getTypeSort(),
+//                        filter.getSort().equalsIgnoreCase("asc")
+//                )
+//                .stream()
+//                .map(DrugMapper::entityToDto)
+//                .toList();
     }
 
     public List<DrugDto> findDrugsByCategory(FilterRequest filter) {

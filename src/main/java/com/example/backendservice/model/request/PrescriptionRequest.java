@@ -10,4 +10,6 @@ import lombok.*;
 public class PrescriptionRequest {
     private String imageBase64;
     private Long id;
+    private Long rate;
+    private String review;
 }
