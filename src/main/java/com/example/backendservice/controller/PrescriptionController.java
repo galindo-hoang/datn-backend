@@ -27,6 +27,12 @@ import static org.springframework.web.bind.annotation.RequestMethod.POST;
 public class PrescriptionController extends BaseController {
     private final PrescriptionService prescriptionService;
 
+
+    @GetMapping
+    public ResponseEntity<PrescriptionDto> getDetails(@RequestParam Long id) {
+        return ResponseEntity.status(HttpStatus.OK).body(prescriptionService.getById(id));
+    }
+
     @RequestMapping(value = "add", method = POST)
     public ResponseEntity<PrescriptionDto> addPrescription(@RequestBody PrescriptionRequest request) {
         return ResponseEntity.status(HttpStatus.ACCEPTED).body(prescriptionService.addPrescription(request));

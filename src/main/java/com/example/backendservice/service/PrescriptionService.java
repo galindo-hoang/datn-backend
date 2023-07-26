@@ -17,4 +17,6 @@ public interface PrescriptionService {
     PrescriptionDto addPrescription(PrescriptionRequest request);
 
     Long getSize();
+
+    PrescriptionDto getById(Long id);
 }

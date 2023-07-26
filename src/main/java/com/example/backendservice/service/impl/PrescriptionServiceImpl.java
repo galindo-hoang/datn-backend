@@ -1,7 +1,9 @@
 package com.example.backendservice.service.impl;
 
 import com.example.backendservice.common.exception.TechnicalException;
+import com.example.backendservice.common.utils.Constants;
 import com.example.backendservice.exception.ResourceInvalidException;
+import com.example.backendservice.exception.ResourceNotFoundException;
 import com.example.backendservice.mapper.PrescriptionMapper;
 import com.example.backendservice.model.dto.LastUpload;
 import com.example.backendservice.model.dto.PrescriptionDto;
@@ -95,11 +97,9 @@ public class PrescriptionServiceImpl implements PrescriptionService {
     @Override
     public PrescriptionDto addPrescription(PrescriptionRequest request) {
         if (request.getImageBase64() != null && !request.getImageBase64().isBlank()) {
-            PrescriptionEntity entity = PrescriptionEntity
-                    .builder()
-                    .rate(request.getRate())
-                    .review(request.getReview())
-                    .build();
+            PrescriptionEntity entity = new PrescriptionEntity();
+            entity.setRate(request.getRate());
+            entity.setReview(request.getReview());
             PrescriptionEntity prescription = prescriptionRepository.save(entity);
             try {
                 Map imageInfo = imageRepositoryCustom.uploadImageBase64Cloudinary(request.getImageBase64(), folder, String.valueOf(prescription.getId()));
@@ -115,6 +115,12 @@ public class PrescriptionServiceImpl implements PrescriptionService {
     @Override
     public Long getSize() {
         return (long) prescriptionRepository.findAll().size();
+    }
+
+    @Override
+    public PrescriptionDto getById(Long id) {
+        PrescriptionEntity prescription = prescriptionRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Prescription " + Constants.NOT_FOUND));
+        return PrescriptionMapper.entityToDto(prescription);
     }
 
     private PrescriptionEntity addProperty(PrescriptionEntity prescription, Map imageInfo) {
