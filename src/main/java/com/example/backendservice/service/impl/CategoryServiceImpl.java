@@ -18,7 +18,6 @@ import org.springframework.transaction.annotation.Transactional;
 import java.io.IOException;
 import java.util.List;
 import java.util.Map;
-import java.util.Objects;
 
 @Service
 @Transactional
@@ -81,26 +80,25 @@ public class CategoryServiceImpl implements CategoryService {
 
     @Override
     public CategoryDto updateCategory(CategoryRequest categoryRequest) {
-        if (categoryRequest.getId() == null || categoryRequest.getId() <= 0) {
+        CategoryEntity request = CategoryMapper.requestToEntity(categoryRequest);
+        if (request.getId() == null || request.getId() <= 0) {
             throw new ResourceInvalidException(Constants.CATEGORY + Constants.IN_VALID);
         } else {
-            CategoryEntity oldCategory = categoryRepository.findById(categoryRequest.getId()).orElseThrow(() -> new ResourceNotFoundException(Constants.CATEGORY + Constants.NOT_FOUND));
-            CategoryEntity parsedCategory = oldCategory.merge(CategoryMapper.requestToEntity(categoryRequest));
+            CategoryEntity oldCategory = categoryRepository.findById(request.getId()).orElseThrow(() -> new ResourceNotFoundException(Constants.CATEGORY + Constants.NOT_FOUND));
+            if (request.getName() != null && !request.getName().isBlank() && !request.getName().equals(oldCategory.getName())) {
+                boolean isExist = categoryRepository.findCategoryEntityByName(request.getName()).isPresent();
+                if (isExist) {
+                    throw new ResourceInvalidException(Constants.NAME + Constants.CATEGORY + Constants.IN_VALID);
+                }
+            }
+            oldCategory.merge(request);
             try {
-                Map image = imageRepositoryCustom.uploadImageBase64Cloudinary(categoryRequest.getImageBase64(), folder, parsedCategory.getName());
-                parsedCategory.setImage(String.valueOf(image.get("secure_url")));
-            } catch (IOException e) {
+                Map image = imageRepositoryCustom.uploadImageBase64Cloudinary(categoryRequest.getImageBase64(), folder, oldCategory.getName());
+                oldCategory.setImage(String.valueOf(image.get("secure_url")));
+            } catch (Throwable e) {
                 e.printStackTrace();
             }
-
-            if (!Objects.equals(oldCategory.getName(), parsedCategory.getName())) {
-                boolean isExist = categoryRepository.findCategoryEntityByName(parsedCategory.getName()).isPresent();
-                if (!isExist) {
-                    return CategoryMapper.entityToDto(categoryRepository.save(parsedCategory));
-                } else throw new ResourceInvalidException(Constants.NAME + Constants.CATEGORY + Constants.IN_VALID);
-            } else {
-                return CategoryMapper.entityToDto(categoryRepository.save(parsedCategory));
-            }
+            return CategoryMapper.entityToDto(categoryRepository.save(oldCategory));
         }
     }
 }

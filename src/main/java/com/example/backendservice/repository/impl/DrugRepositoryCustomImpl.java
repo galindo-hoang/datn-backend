@@ -70,14 +70,13 @@ public class DrugRepositoryCustomImpl implements DrugRepositoryCustom {
     public List<Tuple> findLastUpdate(String startDate, String endDate) {
         Expression<String> yearMonth = drugEntity.lastModify.year().stringValue().concat("-").concat(drugEntity.lastModify.month().stringValue());
 
-        List<Tuple> results = new JPAQueryFactory(entityManager)
+        return new JPAQueryFactory(entityManager)
                 .from(drugEntity)
                 .where(drugEntity.lastModify.goe(Timestamp.valueOf(startDate))
                         .and(drugEntity.lastModify.lt(Timestamp.valueOf(endDate))))
                 .groupBy(drugEntity.lastModify.year(), drugEntity.lastModify.month())
                 .select(yearMonth, drugEntity.count())
                 .fetch();
-        return results;
     }
 
     private OrderSpecifier getTypeSort(SortType typeSort, Boolean asc) {

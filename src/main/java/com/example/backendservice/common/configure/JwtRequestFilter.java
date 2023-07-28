@@ -62,7 +62,7 @@ public class JwtRequestFilter extends OncePerRequestFilter {
 
     private boolean isRestrict(HttpServletRequest request) {
         String path = request.getServletPath();
-        if(path.contains("prescription")) return false;
+        if(path.contains("prescription") || (path.contains("feedback") && path.contains("add"))) return false;
         return path.contains("/update") || path.contains("/delete") || path.contains("/add");
     }
 
