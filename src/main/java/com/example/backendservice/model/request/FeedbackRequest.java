@@ -14,4 +14,6 @@ public class FeedbackRequest {
     private String imageBase64;
     private String note;
     private String os;
+    private String issue;
+    private String email;
 }

@@ -16,4 +16,7 @@ public class FeedbackDto {
     private Long createdOn;
     private String imagePath;
     private String description;
+    private String issue;
+    private String email;
+
 }

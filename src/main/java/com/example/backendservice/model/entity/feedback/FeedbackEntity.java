@@ -18,12 +18,14 @@ public class FeedbackEntity extends BaseEntity implements DataAdapter<FeedbackEn
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    private String title;
-    private String description;
-    private Timestamp createdOn = new Timestamp(System.currentTimeMillis());
-    private String imagePath;
-    private String note;
     private String os;
+    private String email;
+    private String title;
+    private String note;
+    private String imagePath;
+    private String description;
+    private String issue;
+    private Timestamp createdOn = new Timestamp(System.currentTimeMillis());
 
     @Override
     public FeedbackEntity merge(FeedbackEntity newData) {
