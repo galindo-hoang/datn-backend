@@ -1,5 +1,6 @@
 package com.example.backendservice.controller;
 
+import com.example.backendservice.common.controller.BaseController;
 import com.example.backendservice.common.model.SortType;
 import com.example.backendservice.model.dto.FeedbackDto;
 import com.example.backendservice.model.request.FeedbackRequest;
@@ -17,7 +18,7 @@ import static org.springframework.web.bind.annotation.RequestMethod.POST;
 @RestController
 @RequestMapping("feedback")
 @RequiredArgsConstructor
-public class FeedbackController {
+public class FeedbackController extends BaseController {
     private final FeedbackService feedbackService;
 
     @RequestMapping(path = "add", method = POST)
