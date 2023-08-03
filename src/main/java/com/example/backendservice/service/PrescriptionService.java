@@ -1,5 +1,6 @@
 package com.example.backendservice.service;
 
+import com.example.backendservice.model.dto.DetailRate;
 import com.example.backendservice.model.dto.LastUpload;
 import com.example.backendservice.model.dto.PrescriptionDto;
 import com.example.backendservice.model.request.FilterRequest;
@@ -19,4 +20,6 @@ public interface PrescriptionService {
     Long getSize();
 
     PrescriptionDto getById(Long id);
+
+    DetailRate analyzeRate(Integer month);
 }

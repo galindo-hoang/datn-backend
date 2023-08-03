@@ -5,6 +5,7 @@ import com.example.backendservice.common.utils.Constants;
 import com.example.backendservice.exception.ResourceInvalidException;
 import com.example.backendservice.exception.ResourceNotFoundException;
 import com.example.backendservice.mapper.PrescriptionMapper;
+import com.example.backendservice.model.dto.DetailRate;
 import com.example.backendservice.model.dto.LastUpload;
 import com.example.backendservice.model.dto.PrescriptionDto;
 import com.example.backendservice.model.entity.prescription.PrescriptionEntity;
@@ -46,7 +47,12 @@ public class PrescriptionServiceImpl implements PrescriptionService {
         List<String> files = List.of(Objects.requireNonNull(directoryPath.list()));
         for (int i = 0; i < files.size() / 3; ++i) {
             String fileName = files.get(i);
-            PrescriptionEntity prescription = prescriptionRepository.save(PrescriptionEntity.builder().createdOn(randomTimeStamp()).build());
+            PrescriptionEntity prescription = prescriptionRepository.save(
+                    PrescriptionEntity.builder()
+                            .createdOn(randomTimeStamp())
+                            .rate(new Random().nextLong(6))
+                            .build()
+            );
             try {
                 File image = new File(filePath + "/" + fileName);
                 byte[] fileContent = FileUtils.readFileToByteArray(image);
@@ -82,8 +88,8 @@ public class PrescriptionServiceImpl implements PrescriptionService {
         String endDate = endYear + "-" + endMonth + "-01 00:00:00";
         List<LastUpload> result = new ArrayList<>();
         prescriptionRepository.analyzePrescription(startDate, endDate).forEach(data -> {
-            System.out.println("huy.hoang1 data:" + data.toString());
             try {
+                System.out.println("huy.hoang1 date: " + data.get(0, String.class) + " - count: " + data.get(2, Long.class));
                 DateFormat formatter = new SimpleDateFormat("yyyy-MM");
                 Date date = formatter.parse(data.get(0, String.class));
                 result.add(new LastUpload(date.getTime(), data.get(1, Long.class)));
@@ -121,6 +127,30 @@ public class PrescriptionServiceImpl implements PrescriptionService {
     public PrescriptionDto getById(Long id) {
         PrescriptionEntity prescription = prescriptionRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Prescription " + Constants.NOT_FOUND));
         return PrescriptionMapper.entityToDto(prescription);
+    }
+
+    @Override
+    public DetailRate analyzeRate(Integer month) {
+        if (month > 0 && month <= 12) {
+            DetailRate result = new DetailRate();
+            HashMap<String, Long> decoratedStar = new HashMap<>();
+            result.setMonth(month);
+            prescriptionRepository.analyzeRateByMonth(month).forEach(data -> {
+                try {
+                    result.setTotalRate(data.get(0, Long.class));
+                    Long start = data.get(1, Long.class);
+                    if (start != null) {
+                        decoratedStar.put(start + " start", data.get(2, Long.class));
+                    }
+                } catch (Throwable e) {
+                    e.printStackTrace();
+                }
+            });
+            result.setStar(decoratedStar);
+            return result;
+        } else {
+            throw new ResourceInvalidException("month " + Constants.IN_VALID);
+        }
     }
 
     private PrescriptionEntity addProperty(PrescriptionEntity prescription, Map imageInfo) {

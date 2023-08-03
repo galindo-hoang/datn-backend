@@ -40,7 +40,17 @@ public class PrescriptionRepositoryCustomImpl implements PrescriptionRepositoryC
                 .where(prescriptionEntity.createdOn.goe(Timestamp.valueOf(startDate))
                         .and(prescriptionEntity.createdOn.lt(Timestamp.valueOf(endDate))))
                 .groupBy(prescriptionEntity.createdOn.year(), prescriptionEntity.createdOn.month())
-                .select(yearMonth, prescriptionEntity.count())
+                .select(yearMonth, prescriptionEntity.count(), prescriptionEntity.rate.count())
+                .fetch();
+    }
+
+    @Override
+    public List<Tuple> analyzeRateByMonth(Integer month) {
+        return new JPAQueryFactory(entityManager)
+                .from(prescriptionEntity)
+                .where(prescriptionEntity.createdOn.month().eq(month))
+                .groupBy(prescriptionEntity.rate)
+                .select(prescriptionEntity.count(), prescriptionEntity.rate, prescriptionEntity.rate.count())
                 .fetch();
     }
 }

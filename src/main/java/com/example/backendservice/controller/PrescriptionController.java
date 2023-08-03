@@ -1,6 +1,7 @@
 package com.example.backendservice.controller;
 
 import com.example.backendservice.common.controller.BaseController;
+import com.example.backendservice.model.dto.DetailRate;
 import com.example.backendservice.model.dto.LastUpload;
 import com.example.backendservice.model.dto.PrescriptionDto;
 import com.example.backendservice.model.request.FilterRequest;
@@ -67,6 +68,12 @@ public class PrescriptionController extends BaseController {
             @RequestParam Long endMonth
     ) {
         return ResponseEntity.status(HttpStatus.OK).body(prescriptionService.listLastUpload(startYear, startMonth, endYear, endMonth));
+    }
+
+
+    @GetMapping(path = "month/detail")
+    ResponseEntity<DetailRate> analyzeMonth(@RequestParam Integer month) {
+        return ResponseEntity.status(HttpStatus.OK).body(prescriptionService.analyzeRate(month));
     }
 
     @GetMapping("size")
