@@ -12,4 +12,5 @@ import lombok.NoArgsConstructor;
 public class LastUpload {
     Long monthYear;
     Long numberOfDrugs;
+    Long totalRate;
 }

@@ -27,6 +27,7 @@ import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
+import java.util.concurrent.atomic.AtomicReference;
 
 import static com.example.backendservice.common.utils.CodeGeneratorUtils.randomTimeStamp;
 
@@ -89,10 +90,9 @@ public class PrescriptionServiceImpl implements PrescriptionService {
         List<LastUpload> result = new ArrayList<>();
         prescriptionRepository.analyzePrescription(startDate, endDate).forEach(data -> {
             try {
-                System.out.println("huy.hoang1 date: " + data.get(0, String.class) + " - count: " + data.get(2, Long.class));
                 DateFormat formatter = new SimpleDateFormat("yyyy-MM");
                 Date date = formatter.parse(data.get(0, String.class));
-                result.add(new LastUpload(date.getTime(), data.get(1, Long.class)));
+                result.add(new LastUpload(date.getTime(), data.get(1, Long.class), data.get(2, Long.class)));
             } catch (ParseException e) {
                 e.printStackTrace();
             }
@@ -130,22 +130,26 @@ public class PrescriptionServiceImpl implements PrescriptionService {
     }
 
     @Override
-    public DetailRate analyzeRate(Integer month) {
+    public DetailRate analyzeRate(Integer month, Integer year) {
         if (month > 0 && month <= 12) {
             DetailRate result = new DetailRate();
+            AtomicReference<Long> totalRate = new AtomicReference<>(0L);
             HashMap<String, Long> decoratedStar = new HashMap<>();
-            result.setMonth(month);
-            prescriptionRepository.analyzeRateByMonth(month).forEach(data -> {
-                try {
-                    result.setTotalRate(data.get(0, Long.class));
+            try {
+                DateFormat formatter = new SimpleDateFormat("yyyy-MM");
+                Date date = formatter.parse(year + "-" + month);
+                result.setMonthYear(date.getTime());
+                prescriptionRepository.analyzeRateByMonth(month, year).forEach(data -> {
+                    totalRate.updateAndGet(v -> v + data.get(0, Long.class));
                     Long start = data.get(1, Long.class);
                     if (start != null) {
                         decoratedStar.put(start + " start", data.get(2, Long.class));
                     }
-                } catch (Throwable e) {
-                    e.printStackTrace();
-                }
-            });
+                });
+                result.setTotalRate(totalRate.get());
+            } catch (Throwable e) {
+                e.printStackTrace();
+            }
             result.setStar(decoratedStar);
             return result;
         } else {

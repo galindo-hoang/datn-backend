@@ -21,5 +21,5 @@ public interface PrescriptionService {
 
     PrescriptionDto getById(Long id);
 
-    DetailRate analyzeRate(Integer month);
+    DetailRate analyzeRate(Integer month, Integer year);
 }

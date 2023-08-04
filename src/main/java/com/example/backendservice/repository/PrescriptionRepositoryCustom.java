@@ -10,6 +10,6 @@ public interface PrescriptionRepositoryCustom {
 
     List<Tuple> analyzePrescription(String startDate, String endDate);
 
-    List<Tuple> analyzeRateByMonth(Integer month);
+    List<Tuple> analyzeRateByMonth(Integer month, Integer year);
 
 }

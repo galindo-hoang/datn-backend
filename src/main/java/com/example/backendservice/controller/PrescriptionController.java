@@ -72,8 +72,11 @@ public class PrescriptionController extends BaseController {
 
 
     @GetMapping(path = "month/detail")
-    ResponseEntity<DetailRate> analyzeMonth(@RequestParam Integer month) {
-        return ResponseEntity.status(HttpStatus.OK).body(prescriptionService.analyzeRate(month));
+    ResponseEntity<DetailRate> analyzeMonth(
+            @RequestParam Integer month,
+            @RequestParam Integer year
+    ) {
+        return ResponseEntity.status(HttpStatus.OK).body(prescriptionService.analyzeRate(month, year));
     }
 
     @GetMapping("size")

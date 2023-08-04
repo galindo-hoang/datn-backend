@@ -7,6 +7,6 @@ import java.util.Map;
 @Data
 public class DetailRate {
     private Long totalRate;
-    private Integer month;
+    private Long monthYear;
     private Map<String, Long> star;
 }

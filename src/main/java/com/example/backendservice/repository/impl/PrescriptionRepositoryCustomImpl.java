@@ -45,10 +45,10 @@ public class PrescriptionRepositoryCustomImpl implements PrescriptionRepositoryC
     }
 
     @Override
-    public List<Tuple> analyzeRateByMonth(Integer month) {
+    public List<Tuple> analyzeRateByMonth(Integer month, Integer year) {
         return new JPAQueryFactory(entityManager)
                 .from(prescriptionEntity)
-                .where(prescriptionEntity.createdOn.month().eq(month))
+                .where(prescriptionEntity.createdOn.month().eq(month).and(prescriptionEntity.createdOn.year().eq(year)))
                 .groupBy(prescriptionEntity.rate)
                 .select(prescriptionEntity.count(), prescriptionEntity.rate, prescriptionEntity.rate.count())
                 .fetch();
