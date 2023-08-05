@@ -1,12 +1,12 @@
 package com.example.backendservice.service;
 
-import com.example.backendservice.model.dto.DetailRate;
 import com.example.backendservice.model.dto.LastUpload;
 import com.example.backendservice.model.dto.PrescriptionDto;
 import com.example.backendservice.model.request.FilterRequest;
 import com.example.backendservice.model.request.PrescriptionRequest;
 
 import java.util.List;
+import java.util.Map;
 
 public interface PrescriptionService {
     List<PrescriptionDto> getListImage(FilterRequest filter);
@@ -21,5 +21,5 @@ public interface PrescriptionService {
 
     PrescriptionDto getById(Long id);
 
-    DetailRate analyzeRate(Integer month, Integer year);
+    Map<String, Long> analyzeRate(Integer month, Integer year);
 }

@@ -5,7 +5,6 @@ import com.example.backendservice.common.utils.Constants;
 import com.example.backendservice.exception.ResourceInvalidException;
 import com.example.backendservice.exception.ResourceNotFoundException;
 import com.example.backendservice.mapper.PrescriptionMapper;
-import com.example.backendservice.model.dto.DetailRate;
 import com.example.backendservice.model.dto.LastUpload;
 import com.example.backendservice.model.dto.PrescriptionDto;
 import com.example.backendservice.model.entity.prescription.PrescriptionEntity;
@@ -27,7 +26,6 @@ import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
-import java.util.concurrent.atomic.AtomicReference;
 
 import static com.example.backendservice.common.utils.CodeGeneratorUtils.randomTimeStamp;
 
@@ -51,7 +49,7 @@ public class PrescriptionServiceImpl implements PrescriptionService {
             PrescriptionEntity prescription = prescriptionRepository.save(
                     PrescriptionEntity.builder()
                             .createdOn(randomTimeStamp())
-                            .rate(new Random().nextLong(6))
+                            .rate(new Random().nextLong() % 5 + 1)
                             .build()
             );
             try {
@@ -130,28 +128,29 @@ public class PrescriptionServiceImpl implements PrescriptionService {
     }
 
     @Override
-    public DetailRate analyzeRate(Integer month, Integer year) {
+    public Map<String, Long> analyzeRate(Integer month, Integer year) {
         if (month > 0 && month <= 12) {
-            DetailRate result = new DetailRate();
-            AtomicReference<Long> totalRate = new AtomicReference<>(0L);
             HashMap<String, Long> decoratedStar = new HashMap<>();
+            HashMap<Long, Long> rawStar = new HashMap<>();
+            rawStar.put(1L, 0L);
+            rawStar.put(2L, 0L);
+            rawStar.put(3L, 0L);
+            rawStar.put(4L, 0L);
+            rawStar.put(5L, 0L);
             try {
-                DateFormat formatter = new SimpleDateFormat("yyyy-MM");
-                Date date = formatter.parse(year + "-" + month);
-                result.setMonthYear(date.getTime());
                 prescriptionRepository.analyzeRateByMonth(month, year).forEach(data -> {
-                    totalRate.updateAndGet(v -> v + data.get(0, Long.class));
-                    Long start = data.get(1, Long.class);
-                    if (start != null) {
-                        decoratedStar.put(start + " start", data.get(2, Long.class));
+                    Long star = data.get(1, Long.class);
+                    if (star != null) {
+                        rawStar.put(star, data.get(2, Long.class));
                     }
                 });
-                result.setTotalRate(totalRate.get());
             } catch (Throwable e) {
                 e.printStackTrace();
             }
-            result.setStar(decoratedStar);
-            return result;
+            rawStar.forEach((key, value) -> {
+                decoratedStar.put("star" + key, value);
+            });
+            return decoratedStar;
         } else {
             throw new ResourceInvalidException("month " + Constants.IN_VALID);
         }
