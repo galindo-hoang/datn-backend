@@ -44,14 +44,16 @@ public class PrescriptionServiceImpl implements PrescriptionService {
         imageRepositoryCustom.deleteFolder("prescription");
         File directoryPath = new File(filePath);
         List<String> files = List.of(Objects.requireNonNull(directoryPath.list()));
-        for (int i = 0; i < files.size() / 3; ++i) {
+        for (int i = 0; i < files.size() / 6; ++i) {
             String fileName = files.get(i);
+            long rate = new Random().nextLong(6);
             PrescriptionEntity prescription = prescriptionRepository.save(
                     PrescriptionEntity.builder()
                             .createdOn(randomTimeStamp())
-                            .rate(new Random().nextLong() % 5 + 1)
+                            .rate(rate)
                             .build()
             );
+            if (rate == 0) prescription.setRate(null);
             try {
                 File image = new File(filePath + "/" + fileName);
                 byte[] fileContent = FileUtils.readFileToByteArray(image);
