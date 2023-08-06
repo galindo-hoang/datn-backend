@@ -44,7 +44,7 @@ public class DrugServiceImpl implements DrugService {
     @Value("${image.drug.default}")
     private String defaultImage;
 
-//    @PostConstruct
+    @PostConstruct
     public void hello() {
         imageRepositoryCustom.deleteFolder("drug");
         imageRepositoryCustom.deleteFolder("category");

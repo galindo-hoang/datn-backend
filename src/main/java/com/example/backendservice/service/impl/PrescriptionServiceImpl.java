@@ -22,6 +22,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.io.File;
+import java.sql.Timestamp;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -39,12 +40,12 @@ public class PrescriptionServiceImpl implements PrescriptionService {
     @Value("${json.file.prescription}")
     private String filePath;
 
-//    @PostConstruct
+    @PostConstruct
     private void hello() {
         imageRepositoryCustom.deleteFolder("prescription");
         File directoryPath = new File(filePath);
         List<String> files = List.of(Objects.requireNonNull(directoryPath.list()));
-        for (int i = 0; i < files.size() / 6; ++i) {
+        for (int i = 0; i < files.size() / 3; ++i) {
             String fileName = files.get(i);
             long rate = new Random().nextLong(6);
             PrescriptionEntity prescription = prescriptionRepository.save(
@@ -86,7 +87,8 @@ public class PrescriptionServiceImpl implements PrescriptionService {
     @Override
     public List<LastUpload> listLastUpload(Long startYear, Long startMonth, Long endYear, Long endMonth) {
         String startDate = startYear + "-" + startMonth + "-01 00:00:00";
-        String endDate = endYear + "-" + endMonth + "-01 00:00:00";
+        String endDate = endYear + "-" + (endMonth + 1) + "-01 00:00:00";
+        if(endMonth == 12) endDate = (endYear + 1) + "-01-01 00:00:00";
         List<LastUpload> result = new ArrayList<>();
         prescriptionRepository.analyzePrescription(startDate, endDate).forEach(data -> {
             try {
@@ -156,6 +158,39 @@ public class PrescriptionServiceImpl implements PrescriptionService {
         } else {
             throw new ResourceInvalidException("month " + Constants.IN_VALID);
         }
+    }
+
+    @Override
+    public Map<String, Long> listLastUploadStar(List<Long> months) {
+        HashMap<String, Long> decoratedStar = new HashMap<>();
+        HashMap<Long, Long> rawStar = new HashMap<>();
+        rawStar.put(1L, 0L);
+        rawStar.put(2L, 0L);
+        rawStar.put(3L, 0L);
+        rawStar.put(4L, 0L);
+        rawStar.put(5L, 0L);
+        months.forEach(timestamp -> {
+            Timestamp ts = new Timestamp(timestamp);
+            Calendar cal = Calendar.getInstance();
+            cal.setTime(ts);
+            int month = cal.get(Calendar.MONTH) + 1;
+            int year = cal.get(Calendar.YEAR);
+            try {
+                prescriptionRepository.analyzeRateByMonth(month, year).forEach(data -> {
+                    Long star = data.get(1, Long.class);
+                    Long number = data.get(2, Long.class);
+                    if (star != null && number != null) {
+                        rawStar.put(star, rawStar.get(star) + number);
+                    }
+                });
+            } catch (Throwable e) {
+                e.printStackTrace();
+            }
+        });
+        rawStar.forEach((key, value) -> {
+            decoratedStar.put("star" + key, value);
+        });
+        return decoratedStar;
     }
 
     private PrescriptionEntity addProperty(PrescriptionEntity prescription, Map imageInfo) {

@@ -7,6 +7,7 @@ import com.example.backendservice.model.dto.PrescriptionDto;
 import com.example.backendservice.model.request.FilterRequest;
 import com.example.backendservice.model.request.PrescriptionRequest;
 import com.example.backendservice.service.PrescriptionService;
+import com.google.api.Http;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -69,6 +70,13 @@ public class PrescriptionController extends BaseController {
             @RequestParam Long endMonth
     ) {
         return ResponseEntity.status(HttpStatus.OK).body(prescriptionService.listLastUpload(startYear, startMonth, endYear, endMonth));
+    }
+
+    @RequestMapping(path = "lastUpdate/star")
+    public ResponseEntity<Map<String, Long>> findLastUpdateStar(
+            @RequestBody List<Long> months
+    ) {
+        return ResponseEntity.status(HttpStatus.OK).body(prescriptionService.listLastUploadStar(months));
     }
 
 

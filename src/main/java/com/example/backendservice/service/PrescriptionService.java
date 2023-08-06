@@ -22,4 +22,6 @@ public interface PrescriptionService {
     PrescriptionDto getById(Long id);
 
     Map<String, Long> analyzeRate(Integer month, Integer year);
+
+    Map<String, Long> listLastUploadStar(List<Long> months);
 }
