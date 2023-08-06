@@ -40,12 +40,12 @@ public class PrescriptionServiceImpl implements PrescriptionService {
     @Value("${json.file.prescription}")
     private String filePath;
 
-    @PostConstruct
+//    @PostConstruct
     private void hello() {
         imageRepositoryCustom.deleteFolder("prescription");
         File directoryPath = new File(filePath);
         List<String> files = List.of(Objects.requireNonNull(directoryPath.list()));
-        for (int i = 0; i < files.size() / 3; ++i) {
+        for (int i = 200; i < 300; ++i) {
             String fileName = files.get(i);
             long rate = new Random().nextLong(6);
             PrescriptionEntity prescription = prescriptionRepository.save(

@@ -37,7 +37,7 @@ public class UserServiceImpl implements UserService {
     private final JwtTokenUtil jwtTokenUtil;
     private final HashMap<String, Pair<AuthDto, AccountRequest>> register = new HashMap<>();
 
-    @PostConstruct
+//    @PostConstruct
     private void addAdmin() {
         accountRepository.save(AccountEntity.builder()
                 .userName("admin")
