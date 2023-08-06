@@ -39,7 +39,7 @@ public class PrescriptionServiceImpl implements PrescriptionService {
     @Value("${json.file.prescription}")
     private String filePath;
 
-    @PostConstruct
+//    @PostConstruct
     private void hello() {
         imageRepositoryCustom.deleteFolder("prescription");
         File directoryPath = new File(filePath);
