@@ -1,13 +1,11 @@
 package com.example.backendservice.controller;
 
 import com.example.backendservice.common.controller.BaseController;
-import com.example.backendservice.model.dto.DetailRate;
 import com.example.backendservice.model.dto.LastUpload;
 import com.example.backendservice.model.dto.PrescriptionDto;
 import com.example.backendservice.model.request.FilterRequest;
 import com.example.backendservice.model.request.PrescriptionRequest;
 import com.example.backendservice.service.PrescriptionService;
-import com.google.api.Http;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -72,16 +70,16 @@ public class PrescriptionController extends BaseController {
         return ResponseEntity.status(HttpStatus.OK).body(prescriptionService.listLastUpload(startYear, startMonth, endYear, endMonth));
     }
 
-    @RequestMapping(path = "lastUpdate/star")
+    @RequestMapping(path = "lastUpdate/star", method = POST)
     public ResponseEntity<Map<String, Long>> findLastUpdateStar(
-            @RequestBody List<Long> months
+            @RequestBody PrescriptionRequest request
     ) {
-        return ResponseEntity.status(HttpStatus.OK).body(prescriptionService.listLastUploadStar(months));
+        return ResponseEntity.status(HttpStatus.OK).body(prescriptionService.listLastUploadStar(request.getMonths()));
     }
 
 
     @GetMapping(path = "month/detail")
-    ResponseEntity<Map<String,Long>> analyzeMonth(
+    ResponseEntity<Map<String, Long>> analyzeMonth(
             @RequestParam Integer month,
             @RequestParam Integer year
     ) {

@@ -2,6 +2,8 @@ package com.example.backendservice.model.request;
 
 import lombok.*;
 
+import java.util.List;
+
 @Getter
 @Setter
 @AllArgsConstructor
@@ -12,4 +14,6 @@ public class PrescriptionRequest {
     private Long id;
     private Long rate;
     private String review;
+
+    private List<Long> months;
 }
